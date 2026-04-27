@@ -1,0 +1,13 @@
+services:
+  db:
+    image: postgis/postgis:17-3.5
+    container_name: matchme-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: matchme_user
+      POSTGRES_PASSWORD: matchme_password
+      POSTGRES_DB: matchme_db
+    ports:
+      - "5432:5432"
+    tmpfs:
+      - /var/lib/postgresql/data
