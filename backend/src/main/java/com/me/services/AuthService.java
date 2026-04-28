@@ -5,10 +5,13 @@ import com.me.dto.request.auth.RegistrationRequestDto;
 import com.me.dto.response.auth.LoginResponseDto;
 import com.me.dto.response.auth.RegistrationResponseDto;
 import com.me.entities.User;
+import com.me.exceptions.InvalidCredentialsException;
 import com.me.exceptions.UserAlreadyExistsException;
+import com.me.exceptions.UserNotFoundException;
 import com.me.mappers.UserMapper;
 import com.me.repositories.AuthRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,26 +20,41 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService
 {
 	private final AuthRepository authRepository;
+	private final PasswordEncoder passwordEncoder;
+	private final JwtService jwtService;
 
 	@Transactional
-	public RegistrationResponseDto register(RegistrationRequestDto dto)
+	public RegistrationResponseDto register(RegistrationRequestDto request)
 	{
-		boolean isExist = authRepository.existsByEmail(dto.getEmail());
+		boolean isExist = authRepository.existsByEmail(request.getEmail());
 
 		if (isExist)
 		{
-			throw new UserAlreadyExistsException("Such user already exists");
+			throw new UserAlreadyExistsException("User already exists");
 		}
 
-		User user = authRepository.save(UserMapper.toUser(dto));
+		User user = UserMapper.toUser(request);
 
-		return UserMapper.toDto(user);
+		String encodedPassword = passwordEncoder.encode(request.getPassword());
+
+		user.setPassword(encodedPassword);
+
+		User savedUser = authRepository.save(user);
+
+		return UserMapper.toRegistrationResponseDto(savedUser);
 	}
 
-	@Transactional
-	public LoginResponseDto login(LoginRequestDto dto)
+	public LoginResponseDto login(LoginRequestDto request)
 	{
-		authRepository.findByEmail(dto.getEmail())
-		              .orElseThrow()
+		User user = authRepository.findByEmail(request.getEmail())
+		                          .orElseThrow(() -> new UserNotFoundException("User is not found"));
+
+		boolean isPasswordMatch = passwordEncoder.matches(request.getPassword(), user.getPassword());
+
+		if (!isPasswordMatch) throw new InvalidCredentialsException("Invalid credentials");
+
+		String token = jwtService.generateToken(user);
+
+		return UserMapper.toLoginResponseDto(user, token);
 	}
 }

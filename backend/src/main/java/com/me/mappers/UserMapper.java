@@ -1,6 +1,7 @@
 package com.me.mappers;
 
 import com.me.dto.request.auth.RegistrationRequestDto;
+import com.me.dto.response.auth.LoginResponseDto;
 import com.me.dto.response.auth.RegistrationResponseDto;
 import com.me.entities.User;
 
@@ -12,9 +13,16 @@ public class UserMapper
 		                 .setPassword(dto.getPassword());
 	}
 
-	public static RegistrationResponseDto toDto(User user)
+	public static RegistrationResponseDto toRegistrationResponseDto(User user)
 	{
 		return new RegistrationResponseDto().setId(user.getId())
 		                                    .setEmail(user.getEmail());
+	}
+
+	public static LoginResponseDto toLoginResponseDto(User user, String token)
+	{
+		return new LoginResponseDto().setId(user.getId())
+		                             .setEmail(user.getEmail())
+		                             .setToken(token);
 	}
 }

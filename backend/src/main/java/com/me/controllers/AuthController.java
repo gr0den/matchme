@@ -9,7 +9,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -19,15 +22,16 @@ public class AuthController
 	private final AuthService authService;
 
 	@PostMapping("/register")
-	public ResponseEntity<RegistrationResponseDto> register(@Valid @RequestBody RegistrationRequestDto dto)
+	public ResponseEntity<RegistrationResponseDto> register(@Valid @RequestBody RegistrationRequestDto request)
 	{
 		return ResponseEntity.status(HttpStatus.CREATED)
-		                     .body(authService.register(dto));
+		                     .body(authService.register(request));
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto dto)
+	public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto request)
 	{
-		return ResponseEntity.status(HttpStatus.OK.).body(authService.)
+		return ResponseEntity.status(HttpStatus.OK)
+		                     .body(authService.login(request));
 	}
 }

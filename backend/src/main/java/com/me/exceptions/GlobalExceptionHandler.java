@@ -16,4 +16,19 @@ public class GlobalExceptionHandler
 		return ResponseEntity.status(HttpStatus.CONFLICT)
 		                     .body(Map.of("error", e.getMessage()));
 	}
+
+	@ExceptionHandler(UserNotFoundException.class)
+	public ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException e)
+	{
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+		                     .body(Map.of("error", e.getMessage()));
+	}
+
+	@ExceptionHandler(InvalidCredentialsException.class)
+	public ResponseEntity<Object> handleInvalidCredentialsException(InvalidCredentialsException e)
+	{
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+		                     .body(Map.of("error", e.getMessage()));
+	}
+
 }
