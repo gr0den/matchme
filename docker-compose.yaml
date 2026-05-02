@@ -26,7 +26,6 @@ services:
       - db
     networks:
       - matchme-network
-
   frontend:
     build: ./frontend
     container_name: matchme-frontend
@@ -36,7 +35,6 @@ services:
       - backend
     networks:
       - matchme-network
-
 networks:
   matchme-network:
     driver: bridge
