@@ -13,7 +13,7 @@ FROM node:22-alpine AS build
 # creating the working directory in the root of the linux in the container
 WORKDIR /app
 # copying the 2 files with list of frontend dependencies to the /app directory
-COPY package.json package-lock.json .
+COPY package.json package-lock.json ./
 # run clean install, basically means fetch al lthe data in the package-lock.json and install dependencies listed there
 RUN npm ci
 # copies the rest data(/src. vite.config etc) from matchme/frontend to /app directory inside container
