@@ -4,10 +4,39 @@ services:
     container_name: matchme-db
     restart: unless-stopped
     environment:
-      POSTGRES_USER: matchme_user
-      POSTGRES_PASSWORD: matchme_password
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: secret
       POSTGRES_DB: matchme_db
     ports:
       - "5432:5432"
     tmpfs:
       - /var/lib/postgresql/data
+    networks:
+      - matchme-network
+  backend:
+    build: ./backend
+    container_name: matchme-backend
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/matchme_db
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: secret
+    depends_on:
+      - db
+    networks:
+      - matchme-network
+
+  frontend:
+    build: ./frontend
+    container_name: matchme-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - matchme-network
+
+networks:
+  matchme-network:
+    driver: bridge
