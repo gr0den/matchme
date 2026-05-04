@@ -32,4 +32,5 @@ register user:
 connect to db container -> db -> execute the command:
 
 	docker exec -it matchme-db psql -U admin -d matchme_db -c "SELECT * FROM users;"
-	
+
+
