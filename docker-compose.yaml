@@ -1,4 +1,7 @@
+# services -> entities
+
 services:
+  # service name
   db:
     image: postgis/postgis:17-3.5
     container_name: matchme-db
@@ -14,6 +17,7 @@ services:
     networks:
       - matchme-network
   backend:
+    # check for Dockerfile in the backend dir and executes it
     build: ./backend
     container_name: matchme-backend
     ports:
@@ -36,5 +40,6 @@ services:
     networks:
       - matchme-network
 networks:
+  # implement internal network to assign ip addresses for each container
   matchme-network:
     driver: bridge
