@@ -1,10 +1,48 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+//import { useState } from 'react'
 
-function App() {
+export default function App() {
+  return (  
+    <main className="formContainer">
+      <div className="toggleBtns">
+          <button className="loginBtn" type="button">Log in</button>
+          <button className="regBtn" type="button">Register</button>
+      </div>
+      <form>
+
+        <div>
+          <label htmlFor="email">Email:</label>
+          <input id="email" type="text" name="email"></input>
+        </div>
+
+        <div>
+          <label htmlFor="password">Password:</label>
+          <input id="password" type="password" name="password"></input>
+        </div>
+
+        <button>submit</button>
+
+      </form>
+    </main>
+  )
+}
+
+
+
+
+
+
+
+
+
+
+
+/* import reactLogo from './assets/react.svg'
+import viteLogo from './assets/vite.svg'
+import heroImg from './assets/hero.png' */
+
+
+
+/* function App() {
   const [count, setCount] = useState(0)
 
   return (
@@ -119,4 +157,4 @@ function App() {
   )
 }
 
-export default App
+export default App */
