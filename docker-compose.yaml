@@ -1,27 +1,18 @@
-# services -> entities
-
 services:
-  # service name
+
   db:
     image: postgis/postgis:17-3.5
     container_name: matchme-db
-    restart: unless-stopped
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: secret
       POSTGRES_DB: matchme_db
-    ports:
-      - "5432:5432"
-    tmpfs:
-      - /var/lib/postgresql/data
     networks:
       - matchme-network
+
   backend:
-    # check for Dockerfile in the backend dir and executes it
     build: ./backend
     container_name: matchme-backend
-    ports:
-      - "8080:8080"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/matchme_db
       SPRING_DATASOURCE_USERNAME: admin
@@ -30,16 +21,16 @@ services:
       - db
     networks:
       - matchme-network
+
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
     container_name: matchme-frontend
-    ports:
-      - "80:80"
     depends_on:
       - backend
     networks:
       - matchme-network
+
 networks:
-  # implement internal network to assign ip addresses for each container
   matchme-network:
     driver: bridge

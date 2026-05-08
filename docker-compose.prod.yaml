@@ -1,0 +1,19 @@
+services:
+
+  db:
+    restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    restart: unless-stopped
+
+  frontend:
+    restart: unless-stopped
+    build:
+      target: prod
+    ports:
+      - "80:80"
+
+volumes:
+  postgres_data:
