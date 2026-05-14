@@ -1,8 +1,10 @@
 package com.me.controllers;
 
 import com.me.dto.request.auth.LoginRequestDto;
+import com.me.dto.request.auth.LogoutRequestDto;
 import com.me.dto.request.auth.RegistrationRequestDto;
 import com.me.dto.response.auth.LoginResponseDto;
+import com.me.dto.response.auth.LogoutResponseDto;
 import com.me.dto.response.auth.RegistrationResponseDto;
 import com.me.services.AuthService;
 import jakarta.validation.Valid;
@@ -24,14 +26,18 @@ public class AuthController
 	@PostMapping("/register")
 	public ResponseEntity<RegistrationResponseDto> register(@Valid @RequestBody RegistrationRequestDto request)
 	{
-		return ResponseEntity.status(HttpStatus.CREATED)
-		                     .body(authService.register(request));
+		return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(request));
 	}
 
 	@PostMapping("/login")
 	public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto request)
 	{
-		return ResponseEntity.status(HttpStatus.OK)
-		                     .body(authService.login(request));
+		return ResponseEntity.ok().body(authService.login(request));
+	}
+
+	@PostMapping("/logout")
+	public ResponseEntity<LogoutResponseDto> logout(@Valid @RequestBody LogoutRequestDto request)
+	{
+		return ResponseEntity.ok().body(authService.logout(request));
 	}
 }

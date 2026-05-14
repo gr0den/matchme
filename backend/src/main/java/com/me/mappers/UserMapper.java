@@ -2,6 +2,7 @@ package com.me.mappers;
 
 import com.me.dto.request.auth.RegistrationRequestDto;
 import com.me.dto.response.auth.LoginResponseDto;
+import com.me.dto.response.auth.LogoutResponseDto;
 import com.me.dto.response.auth.RegistrationResponseDto;
 import com.me.entities.User;
 
@@ -24,5 +25,10 @@ public class UserMapper
 		return new LoginResponseDto().setId(user.getId())
 		                             .setEmail(user.getEmail())
 		                             .setToken(token);
+	}
+
+	public static LogoutResponseDto toLogoutResponseDto(String message)
+	{
+		return new LogoutResponseDto().setMessage(message);
 	}
 }

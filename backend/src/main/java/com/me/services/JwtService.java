@@ -1,6 +1,7 @@
 package com.me.services;
 
 import com.me.entities.User;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,13 +19,16 @@ public class JwtService
 	@Value("${app.jwt.expirationTime}")
 	private long expirationTime;
 
+
 	public String generateToken(User user)
 	{
+		Date expiresAt = new Date(System.currentTimeMillis() + expirationTime);
+
 		return Jwts.builder()
 		           .subject(user.getEmail())
 		           .claim("id", user.getId())
 		           .issuedAt(new Date())
-		           .expiration(new Date(System.currentTimeMillis() + expirationTime))
+		           .expiration(expiresAt)
 		           .signWith(getSecretKey())
 		           .compact();
 	}
@@ -44,6 +48,17 @@ public class JwtService
 		{
 			return false;
 		}
+	}
+
+	public Date getExpirationDate(String token)
+	{
+		Claims claims = Jwts.parser()
+		                    .verifyWith(getSecretKey())
+		                    .build()
+		                    .parseSignedClaims(token)
+		                    .getPayload();
+
+		return claims.getExpiration();
 	}
 
 	private SecretKey getSecretKey()
