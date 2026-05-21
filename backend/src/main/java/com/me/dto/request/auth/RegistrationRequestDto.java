@@ -9,10 +9,10 @@ import lombok.Setter;
 @Setter
 public class RegistrationRequestDto
 {
-	@NotBlank(message = "Please enter your email address")
+	@NotBlank(message = "Email field cannot be blank")
 	@Email(message = "Invalid email format")
 	private String email;
 
-	@NotBlank(message = "Please enter your password")
+	@NotBlank(message = "Password field cannot be blank")
 	private String password;
 }
