@@ -17,6 +17,11 @@ services:
       POSTGRES_DB: matchme_db
     networks:
       - matchme-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U admin -d matchme_db -h 127.0.0.1" ]
+      interval: 1s
+      timeout: 1s
+      retries: 20
 
   backend:
     build: ./backend
@@ -26,7 +31,8 @@ services:
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: secret
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - matchme-network
 
