@@ -8,6 +8,6 @@ dev:
 prod:
 	docker compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --build
 down:
-	docker compose down
+	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml down
 clean:
-	docker compose down -v
+	docker compose -f docker-compose.yaml -f docker-compose.dev.yaml down -v
