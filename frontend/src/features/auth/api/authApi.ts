@@ -3,7 +3,7 @@ import type { LoginCredentials, LoginResponseDto, RegiterCredentials, Registrati
 const BASE_URL = "http://localhost:3000/api/auth";
 
 export async function loginUser(credentials: LoginCredentials): Promise<LoginResponseDto> {
-    const response = await fetch(`${BASE_URL}/login`, {
+    const request = await fetch(`${BASE_URL}/login`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -11,20 +11,26 @@ export async function loginUser(credentials: LoginCredentials): Promise<LoginRes
         body: JSON.stringify(credentials),
     })
 
-    if (!response.ok) {
-        throw new Error("Invalid email or password")
+    //if (!request.ok) {
+    //    const errorData = await request.json()
+    //    throw new Error(errorData.error || "An error occured")
+    //}
+    if (!request.ok) {
+        try {
+            const errorData = await request.json()
+            throw new Error(errorData.error || "An error occured")
+        } catch (e) {
+            // If response body is empty or not JSON, use a generic error
+            throw new Error(`Invalid credentials: Error: ${request.status} ${request.statusText}`)
+        }
     }
 
-    const result = await response.json()
-
-    // receive token
-    //localStorage.setItem("token", data.token);
-
+    const result = await request.json()
     return result
 }
 
 export async function registerUser(credentials: RegiterCredentials): Promise<RegistrationResponseDto> {
-    const response = await fetch(`${BASE_URL}/register`, {
+    const request = await fetch(`${BASE_URL}/register`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -32,12 +38,22 @@ export async function registerUser(credentials: RegiterCredentials): Promise<Reg
         body: JSON.stringify(credentials),
     })
 
-    if (!response.ok) {
-        throw new Error("Invalid email or password")
+    //if (!request.ok) {
+    //    const errorData = await request.json()
+    //    console.log("errorData inside authApi: ", errorData)
+    //    throw new Error(errorData.error || "An error occured")
+    //}
+    if (!request.ok) {
+        try {
+            const errorData = await request.json()
+            throw new Error(errorData.error || "An error occured")
+        } catch (e) {
+            // If response body is empty or not JSON, use a generic error
+            throw new Error(`Invalid credentials: Error: ${request.status} ${request.statusText}`)
+        }
     }
 
-    const result = await response.json()
-
+    const result = await request.json()
     return result
 }
 

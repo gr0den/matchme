@@ -1,33 +1,39 @@
 import { loginUser } from "../api/authApi"
+import "./loginForm.css"
 
-export default function LoginForm() {
+interface LoginFormProps {
+  onError: (errorMessage: string) => void
+}
+
+export default function LoginForm({ onError }: LoginFormProps) {
 
   async function logIn(formData: FormData): Promise<void> {
+
     const email = formData.get("email")
     const password = formData.get("password")
 
+    // required check to ensure typesafety
     if (typeof email !== "string" || typeof password !== "string") {
       console.log("value not string")
       return
     }
-    console.log(email, password)
-    // call api and receive answer
+
     try {
       const result = await loginUser({email, password})
-
       console.log("Logged in:", result);
-      // navigate("/profile") later
 
     } catch (error) {
-      console.error("Login failed", error);
+      const message = error instanceof Error ? error.message : "Login failed"
+        console.log("message inside of LoginForm: " + message)
+        onError(message)
     }
   }
 
     return (
-        <form action={logIn}>
+        <form className="login-form" action={logIn}>
             <div>
               <label htmlFor="email">Email:</label>
-              <input id="email" type="email" name="email"></input>
+              <input id="email" type="text" name="email"></input>
             </div>
 
             <div>

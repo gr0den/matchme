@@ -21,6 +21,38 @@
 
     border-radius: 8px;
 
-    box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+    box-shadow: rgb(207, 207, 207) 0px 0px 10px 4px; /*color, x- coorinate , y- coordinate , blur, spread*/
     
+    overflow: visible;
+}
+
+.toggleButtons {
+    display: flex;
+    width: 350px;
+}
+
+.toggleButtons > button {
+    flex: 1;
+    height: 40px;
+    background-color: white;
+    border-bottom: none;
+    border-color: rgb(240, 220, 191);
+    border-width: 1px;
+    font-weight: 500;
+    box-shadow:  0 -8px 6px -6px rgba(207, 207, 207) inset;
+    position: relative;
+}
+
+.toggleButtons > button:hover {
+    box-shadow: none;
+}
+
+.loginBtn {
+    border-radius: 8px 0px 0px 0px;
+    border-right: none;
+}
+
+.regBtn {
+    border-radius: 0px 8px 0px 0px;
+    border-left: none;
 }
