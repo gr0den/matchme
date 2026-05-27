@@ -40,7 +40,7 @@ public class GlobalExceptionHandler
 
 		e.getBindingResult().getFieldErrors().forEach(err ->
 		{
-			errors.put(err.getField(), err.getDefaultMessage());
+			errors.put("error", err.getDefaultMessage());
 		});
 
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
