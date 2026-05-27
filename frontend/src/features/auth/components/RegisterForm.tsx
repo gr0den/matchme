@@ -32,7 +32,7 @@ export default function RegisterForm({ onError }: RegisterFormProps) {
               <input id="email" type="text" name="email"></input>
             </div>
 
-            <div>
+            <div className="input-container">
               <label htmlFor="password">Password:</label>
               <input id="password" type="password" name="password"></input>
             </div>
