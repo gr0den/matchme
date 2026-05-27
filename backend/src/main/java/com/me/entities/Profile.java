@@ -18,14 +18,12 @@ public class Profile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    @OneToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(nullable = false, length = 50)
     private String username;
 
-    @Column(columnDefinition = "TEXT")
     private String bio;
 
     @Column(name = "picture_url")
@@ -34,30 +32,21 @@ public class Profile {
     @Column(columnDefinition = "geography(Point, 4326)")
     private Point location;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany
     @JoinTable
             (
-                    name = "profile_interests",
+                    name = "profile_interest",
                     joinColumns = @JoinColumn(name = "profile_id"),
                     inverseJoinColumns = @JoinColumn(name = "interest_id")
             )
-    private Set<Interest> interests = new HashSet<>();
+    private Set<Interest> interests;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany
     @JoinTable
             (
-                    name = "profile_own_subgenres",
+                    name = "profile_genre",
                     joinColumns = @JoinColumn(name = "profile_id"),
-                    inverseJoinColumns = @JoinColumn(name = "subgenre_id")
+                    inverseJoinColumns = @JoinColumn(name = "genre_id")
             )
-    private Set<Subgenre> ownSubgenres = new HashSet<>();
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable
-            (
-                    name = "profile_target_subgenres",
-                    joinColumns = @JoinColumn(name = "profile_id"),
-                    inverseJoinColumns = @JoinColumn(name = "subgenre_id")
-            )
-    private Set<Subgenre> targetSubgenres = new HashSet<>();
+    private Set<Genre> genres;
 }
