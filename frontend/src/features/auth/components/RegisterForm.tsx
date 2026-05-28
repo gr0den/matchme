@@ -15,11 +15,13 @@ export default function RegisterForm({ onError }: RegisterFormProps) {
           console.log("value not string")
           return
         }
+
         try {
           const result = await registerUser({email, password})
           console.log("Registered:", result)
 
         } catch (error) {
+          // typecheck to ensure that caught error was an instance of Error otherwise use: "Registration failed" 
           const message = error instanceof Error ? error.message : "Registration failed"
           onError(message)
         }

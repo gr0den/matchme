@@ -35,16 +35,17 @@
     flex: 1;
     height: 40px;
     background-color: white;
-    border-bottom: none;
-    border-color: rgb(240, 220, 191);
+    border: none;
+    /*border-color: rgb(240, 220, 191);*/
     border-width: 1px;
     font-weight: 500;
-    box-shadow:  0 -8px 6px -6px rgba(207, 207, 207) inset;
+    box-shadow:  0 0px 6px 0px rgba(207, 207, 207) inset, rgb(207, 207, 207) 0px -3px 6px 1px; /*0 -8px 6px -6px rgba(207, 207, 207) inset;*/
     position: relative;
 }
 
+.toggleButtons > button.active,
 .toggleButtons > button:hover {
-    box-shadow: none;
+    box-shadow: rgb(207, 207, 207) 0px -3px 4px 0px;
 }
 
 .loginBtn {

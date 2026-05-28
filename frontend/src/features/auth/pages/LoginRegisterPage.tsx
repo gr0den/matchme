@@ -28,8 +28,15 @@ export default function LoginRegisterPage() {
             <Header />
             <main className="login-main">
                 <div className="toggleButtons">
-                        <button className="loginBtn" onClick={displayLogin}>Login</button>
-                        <button className="regBtn" onClick={displayRegister}>Register</button>
+                        <button 
+                        className={`loginBtn ${displayLogReg ? "active" : ""}`}
+                        onClick={displayLogin}>Login
+                        </button>
+
+                        <button 
+                        className={`regBtn ${displayLogReg ? "" : "active"}`} 
+                        onClick={displayRegister}>Register
+                        </button>
                 </div>
                 <div className="center-card">
                     {displayLogReg === true ? 
