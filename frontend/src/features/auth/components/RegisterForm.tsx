@@ -1,6 +1,11 @@
 import { registerUser } from "../api/authApi"
+import "./registerForm.css"
 
-export default function RegisterForm() {
+interface RegisterFormProps {
+  onError: (errorMessage: string) => void
+}
+
+export default function RegisterForm({ onError }: RegisterFormProps) {
 
     async function register(formData: FormData): Promise<void> {
         const email = formData.get("email")
@@ -10,24 +15,23 @@ export default function RegisterForm() {
           console.log("value not string")
           return
         }
-        console.log(email, password)
-        // call api and receive answer
+
         try {
           const result = await registerUser({email, password})
-    
-          console.log("Logged in:", result);
-          // navigate("/profile") later
-    
+          console.log("Registered:", result)
+
         } catch (error) {
-          console.error("Login failed", error);
+          // typecheck to ensure that caught error was an instance of Error otherwise use: "Registration failed" 
+          const message = error instanceof Error ? error.message : "Registration failed"
+          onError(message)
         }
       }
 
     return (
-        <form action={register}>
+        <form className="register-form" action={register}>
             <div>
               <label htmlFor="email">Email:</label>
-              <input id="email" type="email" name="email"></input>
+              <input id="email" type="text" name="email"></input>
             </div>
 
             <div className="input-container">
