@@ -5,15 +5,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "genres")
+@Table(name = "intentions")
 @Getter
 @Setter
-public class Genre
+public class Intention
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String genre;
+    private String intention;
 }

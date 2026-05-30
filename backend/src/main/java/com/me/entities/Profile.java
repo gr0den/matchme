@@ -3,30 +3,28 @@ package com.me.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.geolatte.geom.Point;
+import org.locationtech.jts.geom.Point;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "profiles")
+@Table(name = "user_profiles")
 @Getter
 @Setter
-public class Profile {
-
+public class Profile
+{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne
+    @MapsId
     @JoinColumn(name = "user_id")
     private User user;
 
     private String username;
 
-    private String bio;
+    private String biography;
 
-    @Column(name = "picture_url")
     private String pictureUrl;
 
     @Column(columnDefinition = "geography(Point, 4326)")
@@ -35,8 +33,8 @@ public class Profile {
     @ManyToMany
     @JoinTable
             (
-                    name = "profile_interest",
-                    joinColumns = @JoinColumn(name = "profile_id"),
+                    name = "user_interests",
+                    joinColumns = @JoinColumn(name = "user_id"),
                     inverseJoinColumns = @JoinColumn(name = "interest_id")
             )
     private Set<Interest> interests;
@@ -44,9 +42,19 @@ public class Profile {
     @ManyToMany
     @JoinTable
             (
-                    name = "profile_genre",
-                    joinColumns = @JoinColumn(name = "profile_id"),
+                    name = "user_intentions",
+                    joinColumns = @JoinColumn(name = "user_id"),
+                    inverseJoinColumns = @JoinColumn(name = "intention_id")
+            )
+    private Set<Intention> intentions;
+
+    @ManyToMany
+    @JoinTable
+            (
+                    name = "user_genres",
+                    joinColumns = @JoinColumn(name = "user_id"),
                     inverseJoinColumns = @JoinColumn(name = "genre_id")
             )
     private Set<Genre> genres;
+
 }
