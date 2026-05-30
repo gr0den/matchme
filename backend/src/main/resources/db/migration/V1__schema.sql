@@ -11,7 +11,7 @@ CREATE TABLE users
 CREATE TABLE genres
 (
     id BIGSERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL UNIQUE
+    genre VARCHAR(255) NOT NULL UNIQUE
 );
 
 CREATE TABLE interests
@@ -23,7 +23,7 @@ CREATE TABLE interests
 CREATE TABLE intentions
 (
     id BIGSERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL UNIQUE
+    intention VARCHAR(255) NOT NULL UNIQUE
 );
 
 CREATE TABLE user_profiles
