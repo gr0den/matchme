@@ -20,12 +20,6 @@ CREATE TABLE interests
     interest VARCHAR(255) NOT NULL UNIQUE
 );
 
-CREATE TABLE intentions
-(
-    id BIGSERIAL PRIMARY KEY,
-    intention VARCHAR(255) NOT NULL UNIQUE
-);
-
 CREATE TABLE user_profiles
 (
     user_id BIGINT PRIMARY KEY,
@@ -45,15 +39,6 @@ CREATE TABLE user_interests
     FOREIGN KEY (interest_id) REFERENCES interests (id) ON DELETE CASCADE
 );
 
-CREATE TABLE user_intentions
-(
-    user_id BIGINT NOT NULL,
-    intention_id BIGINT NOT NULL,
-    PRIMARY KEY (user_id, intention_id),
-    FOREIGN KEY (user_id) REFERENCES user_profiles (user_id) ON DELETE CASCADE,
-    FOREIGN KEY (intention_id) REFERENCES intentions (id) ON DELETE CASCADE
-);
-
 CREATE TABLE user_genres
 (
     user_id BIGINT NOT NULL,
@@ -63,8 +48,11 @@ CREATE TABLE user_genres
     FOREIGN KEY (genre_id) REFERENCES genres (id) ON DELETE CASCADE
 );
 
-
-
-
-
-
+CREATE TABLE user_target_genres
+(
+    user_id BIGINT NOT NULL,
+    genre_id BIGINT NOT NULL,
+    PRIMARY KEY (user_id, genre_id),
+    FOREIGN KEY (user_id) REFERENCES user_profiles (user_id) ON DELETE CASCADE,
+    FOREIGN KEY (genre_id) REFERENCES genres (id) ON DELETE CASCADE
+);

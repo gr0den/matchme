@@ -23,16 +23,3 @@ VALUES
         ('Interest8'),
         ('Interest9'),
         ('Interest10');
-
-INSERT INTO intentions (intention)
-VALUES
-            ('Engineering'),
-            ('Sport'),
-            ('Travelling'),
-            ('Entrepreneurship'),
-            ('Philosophy'),
-            ('Intention1'),
-            ('Intention2'),
-            ('Intention3'),
-            ('Intention4'),
-            ('Intention5');

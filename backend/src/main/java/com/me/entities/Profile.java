@@ -39,14 +39,6 @@ public class Profile
             )
     private Set<Interest> interests;
 
-    @ManyToMany
-    @JoinTable
-            (
-                    name = "user_intentions",
-                    joinColumns = @JoinColumn(name = "user_id"),
-                    inverseJoinColumns = @JoinColumn(name = "intention_id")
-            )
-    private Set<Intention> intentions;
 
     @ManyToMany
     @JoinTable
@@ -55,6 +47,15 @@ public class Profile
                     joinColumns = @JoinColumn(name = "user_id"),
                     inverseJoinColumns = @JoinColumn(name = "genre_id")
             )
-    private Set<Genre> genres;
+    private Set<Genre> myGenres;
+
+    @ManyToMany
+    @JoinTable
+            (
+                    name = "user_target_genres",
+                    joinColumns = @JoinColumn(name = "user_id"),
+                    inverseJoinColumns = @JoinColumn(name = "genre_id")
+            )
+    private Set<Genre> targetGenres;
 
 }
