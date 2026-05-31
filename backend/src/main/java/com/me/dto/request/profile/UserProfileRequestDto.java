@@ -1,9 +1,6 @@
 package com.me.dto.request.profile;
 
-import com.me.entities.Genre;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -28,7 +25,21 @@ public class UserProfileRequestDto
 
     @NotEmpty(message = "Genres set cannot be empty")
     @Size(min = 1, max = 10, message = "Amount of selected genres should be at least 1")
-    private Set<Genre> genres;
+    private Set<Long> genres;
 
-    @
+    @NotEmpty(message = "Target genres set cannot be empty")
+    @Size(min = 1, max = 10, message = "Amount of selected genres should be at least 1")
+    private Set<Long> targetGenres;
+
+    @NotNull(message = "Latitude is required")
+    @Min(value = -90, message = "Invalid latitude")
+    @Max(value = 90, message = "Invalid latitude")
+    private Double latitude;
+
+    @NotNull(message = "Longitude is required")
+    @Min(value = -180, message = "Invalid longitude")
+    @Max(value = 180, message = "Invalid longitude")
+    private Double longitude;
+
+    private String pictureUrl;
 }
