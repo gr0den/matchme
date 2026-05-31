@@ -29,10 +29,4 @@ public class TagController
     {
         return tagService.getInterests();
     }
-
-    @GetMapping("/intentions")
-    public List<Intention> getIntentions()
-    {
-        return tagService.getIntetions();
-    }
 }
