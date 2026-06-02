@@ -34,6 +34,8 @@ public class AuthController
         
         ResponseCookie jwtCookie = jwtService.generateJwtCookie(registrationResponseDto.getToken());
 
+        registrationResponseDto.setToken(null);
+
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(registrationResponseDto);
     }
 
