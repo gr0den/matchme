@@ -1,6 +1,7 @@
 package com.me.entities;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.locationtech.jts.geom.Point;
@@ -14,6 +15,7 @@ import java.util.Set;
 public class Profile
 {
     @Id
+    @Setter(AccessLevel.NONE)
     private Long id;
 
     @OneToOne

@@ -1,5 +1,6 @@
 package com.me.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -24,6 +25,7 @@ public class User
 	@Column(nullable = false)
 	private String password;
 
+	@JsonIgnore
 	@OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
 	private Profile profile;
 }
