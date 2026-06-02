@@ -12,4 +12,6 @@ public class RegistrationResponseDto
 	private Long id;
 
 	private String email;
+
+    private String token;
 }

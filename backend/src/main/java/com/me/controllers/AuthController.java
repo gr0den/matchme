@@ -30,8 +30,11 @@ public class AuthController
     @PostMapping("/register")
     public ResponseEntity<RegistrationResponseDto> register(@Valid @RequestBody RegistrationRequestDto request)
     {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                             .body(authService.register(request));
+        RegistrationResponseDto registrationResponseDto = authService.register(request);
+        
+        ResponseCookie jwtCookie = jwtService.generateJwtCookie(registrationResponseDto.getToken());
+
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(registrationResponseDto);
     }
 
     @PostMapping("/login")
