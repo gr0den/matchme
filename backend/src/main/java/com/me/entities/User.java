@@ -1,5 +1,6 @@
 package com.me.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -15,7 +16,7 @@ public class User
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Setter(AccessLevel.NONE) // we don't want to have a setter for an id field, it's auto-injected by hibernate
+	@Setter(AccessLevel.NONE)
 	private Long id;
 
 	@Column(nullable = false, unique = true)
@@ -23,4 +24,8 @@ public class User
 
 	@Column(nullable = false)
 	private String password;
+
+	@JsonIgnore
+	@OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+	private Profile profile;
 }

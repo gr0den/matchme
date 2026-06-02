@@ -13,7 +13,5 @@ public class LoginResponseDto
 
 	private String token;
 
-	private String tokenType = "Bearer";
-
 	private String email;
 }

@@ -10,27 +10,30 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-public class SecurityConfig
-{
-	@Bean
-	public PasswordEncoder passwordEncoder()
-	{
-		return new BCryptPasswordEncoder();
-	}
+public class SecurityConfig {
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http)
-	{
-		// Disable special csrf check and allow specific auth requests to be passed to backend without token.
-		// Other requests will require token.
-		http.csrf(AbstractHttpConfigurer::disable)
-		    .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-		    .authorizeHttpRequests(auth -> auth
-		    .requestMatchers("/api/auth/register", "/api/auth/login")
-		    .permitAll()
-		    .anyRequest()
-		    .authenticated());
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http)
+    {
+        // Disable special csrf check and allow specific auth requests to be passed to backend without token.
+        // Other requests will require token.
+        http.csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers
+                                (
+                                        "/api/auth/register",
+                                        "/api/auth/login",
+                                        "/api/tags/**"
+                                )
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated());
 
-		return http.build();
-	}
+        return http.build();
+    }
 }
