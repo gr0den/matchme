@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.locationtech.jts.geom.Point;
 
 import java.util.Set;
@@ -12,6 +13,7 @@ import java.util.Set;
 @Table(name = "user_profiles")
 @Getter
 @Setter
+@Accessors(chain = true)
 public class Profile
 {
     @Id
