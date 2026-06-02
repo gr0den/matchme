@@ -36,7 +36,7 @@ public class AuthController
 
         registrationResponseDto.setToken(null);
 
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(registrationResponseDto);
+        return ResponseEntity.status(HttpStatus.CREATED).header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(registrationResponseDto);
     }
 
     @PostMapping("/login")
