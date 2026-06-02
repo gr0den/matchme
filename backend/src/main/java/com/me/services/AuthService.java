@@ -10,7 +10,7 @@ import com.me.entities.User;
 import com.me.exceptions.InvalidCredentialsException;
 import com.me.exceptions.UserAlreadyExistsException;
 import com.me.exceptions.UserNotFoundException;
-import com.me.mappers.UserMapper;
+import com.me.mappers.AuthMapper;
 import com.me.repositories.AuthRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -18,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -40,7 +39,7 @@ public class AuthService
 			throw new UserAlreadyExistsException("User already exists");
 		}
 
-		User user = UserMapper.toUser(request);
+		User user = AuthMapper.toUser(request);
 
 		String encodedPassword = passwordEncoder.encode(request.getPassword());
 
@@ -50,7 +49,7 @@ public class AuthService
 
         String token = jwtService.generateToken(savedUser);
 
-		return UserMapper.toRegistrationResponseDto(savedUser, token);
+		return AuthMapper.toRegistrationResponseDto(savedUser, token);
 	}
 
 	public LoginResponseDto login(LoginRequestDto request)
@@ -64,7 +63,7 @@ public class AuthService
 
 		String token = jwtService.generateToken(user);
 
-		return UserMapper.toLoginResponseDto(user, token);
+		return AuthMapper.toLoginResponseDto(user, token);
 	}
 
 	public LogoutResponseDto logout(LogoutRequestDto request)
@@ -77,9 +76,9 @@ public class AuthService
 		{
 			redis.opsForValue().set(token, "blacklisted", tokenLeftTime, TimeUnit.MILLISECONDS);
 
-			return UserMapper.toLogoutResponseDto("user is successfully logged out");
+			return AuthMapper.toLogoutResponseDto("User is successfully logged out");
 		}
 
-		return UserMapper.toLogoutResponseDto("user token is already expired");
+		return AuthMapper.toLogoutResponseDto("User token is already expired");
 	}
 }

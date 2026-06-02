@@ -15,19 +15,5 @@ public class UserProfileResponseDto
 {
     private Long userId;
 
-    private String userName;
-
-    private String bio;
-
-    private Set<Interest> interests;
-
-    private Set<Genre> genres;
-
-    private Set<Genre> targetGenres;
-
-    private Double latitude;
-
-    private Double longitude;
-
-    private String pictureUrl;
+    private String message;
 }
