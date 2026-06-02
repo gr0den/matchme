@@ -14,7 +14,7 @@ public class UserMapper
 		                 .setPassword(dto.getPassword());
 	}
 
-	public static RegistrationResponseDto toRegistrationResponseDto(User user)
+	public static RegistrationResponseDto toRegistrationResponseDto(User user, String token)
 	{
 		return new RegistrationResponseDto().setId(user.getId())
 		                                    .setEmail(user.getEmail());

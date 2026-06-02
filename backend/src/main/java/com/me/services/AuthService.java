@@ -48,7 +48,9 @@ public class AuthService
 
 		User savedUser = authRepository.save(user);
 
-		return UserMapper.toRegistrationResponseDto(savedUser);
+        String token = jwtService.generateToken(savedUser);
+
+		return UserMapper.toRegistrationResponseDto(savedUser, token);
 	}
 
 	public LoginResponseDto login(LoginRequestDto request)
