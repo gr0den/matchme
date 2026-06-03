@@ -1,4 +1,4 @@
-package com.me.dto.response.auth;
+package com.me.dto.response.profile;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,11 +7,9 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class LoginResponseDto
+public class CreateProfileResponse
 {
-	private Long id;
+    private Long userId;
 
-	private String token;
-
-	private String email;
+    private String message;
 }

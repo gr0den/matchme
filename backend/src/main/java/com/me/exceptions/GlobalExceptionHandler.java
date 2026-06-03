@@ -45,4 +45,10 @@ public class GlobalExceptionHandler
 
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
 	}
+
+    @ExceptionHandler(ProfileNotFoundException.class)
+    public ResponseEntity<Object> handleProfileNotFoundException(ProfileNotFoundException e)
+    {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
+    }
 }

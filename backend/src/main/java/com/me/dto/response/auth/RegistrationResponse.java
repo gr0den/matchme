@@ -7,7 +7,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class RegistrationResponseDto
+public class RegistrationResponse
 {
 	private Long id;
 
