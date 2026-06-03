@@ -1,11 +1,11 @@
 package com.me.services;
 
-import com.me.dto.request.auth.LoginRequestDto;
-import com.me.dto.request.auth.LogoutRequestDto;
-import com.me.dto.request.auth.RegistrationRequestDto;
-import com.me.dto.response.auth.LoginResponseDto;
-import com.me.dto.response.auth.LogoutResponseDto;
-import com.me.dto.response.auth.RegistrationResponseDto;
+import com.me.dto.requests.auth.LoginRequest;
+import com.me.dto.requests.auth.LogoutRequest;
+import com.me.dto.requests.auth.RegistrationRequest;
+import com.me.dto.response.auth.LoginResponse;
+import com.me.dto.response.auth.LogoutResponse;
+import com.me.dto.response.auth.RegistrationResponse;
 import com.me.entities.User;
 import com.me.exceptions.InvalidCredentialsException;
 import com.me.exceptions.UserAlreadyExistsException;
@@ -30,7 +30,7 @@ public class AuthService
 	private final StringRedisTemplate redis;
 
 	@Transactional
-	public RegistrationResponseDto register(RegistrationRequestDto request)
+	public RegistrationResponse register(RegistrationRequest request)
 	{
 		boolean isExist = authRepository.existsByEmail(request.getEmail());
 
@@ -52,10 +52,10 @@ public class AuthService
 		return AuthMapper.toRegistrationResponseDto(savedUser, token);
 	}
 
-	public LoginResponseDto login(LoginRequestDto request)
+	public LoginResponse login(LoginRequest request)
 	{
 		User user = authRepository.findByEmail(request.getEmail())
-		                          .orElseThrow(() -> new UserNotFoundException("User is not found"));
+		                          .orElseThrow(() -> new UserNotFoundException());
 
 		boolean isPasswordMatch = passwordEncoder.matches(request.getPassword(), user.getPassword());
 
@@ -66,7 +66,7 @@ public class AuthService
 		return AuthMapper.toLoginResponseDto(user, token);
 	}
 
-	public LogoutResponseDto logout(LogoutRequestDto request)
+	public LogoutResponse logout(LogoutRequest request)
 	{
 		String token = request.getToken();
 

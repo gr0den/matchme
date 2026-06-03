@@ -2,8 +2,10 @@ package com.me.exceptions;
 
 public class UserNotFoundException extends RuntimeException
 {
-	public UserNotFoundException(String message)
+    private static final String DEFAULT_MESSAGE = "User is not found";
+
+	public UserNotFoundException()
 	{
-		super(message);
+        super(DEFAULT_MESSAGE);
 	}
 }

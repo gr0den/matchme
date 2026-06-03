@@ -1,0 +1,1 @@
+UPDATE user_profiles SET username = 'newTest' WHERE user_id = 1;

@@ -7,7 +7,11 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class LogoutResponseDto
+public class LoginResponse
 {
-	private String message;
+	private Long id;
+
+	private String token;
+
+	private String email;
 }

@@ -1,11 +1,11 @@
 package com.me.controllers;
 
-import com.me.dto.request.auth.LoginRequestDto;
-import com.me.dto.request.auth.LogoutRequestDto;
-import com.me.dto.request.auth.RegistrationRequestDto;
-import com.me.dto.response.auth.LoginResponseDto;
-import com.me.dto.response.auth.LogoutResponseDto;
-import com.me.dto.response.auth.RegistrationResponseDto;
+import com.me.dto.requests.auth.LoginRequest;
+import com.me.dto.requests.auth.LogoutRequest;
+import com.me.dto.requests.auth.RegistrationRequest;
+import com.me.dto.response.auth.LoginResponse;
+import com.me.dto.response.auth.LogoutResponse;
+import com.me.dto.response.auth.RegistrationResponse;
 import com.me.services.AuthService;
 import com.me.services.JwtService;
 import jakarta.validation.Valid;
@@ -28,33 +28,33 @@ public class AuthController
     private final JwtService jwtService;
 
     @PostMapping("/register")
-    public ResponseEntity<RegistrationResponseDto> register(@Valid @RequestBody RegistrationRequestDto request)
+    public ResponseEntity<RegistrationResponse> register(@Valid @RequestBody RegistrationRequest request)
     {
-        RegistrationResponseDto registrationResponseDto = authService.register(request);
+        RegistrationResponse registrationResponse = authService.register(request);
         
-        ResponseCookie jwtCookie = jwtService.generateJwtCookie(registrationResponseDto.getToken());
+        ResponseCookie jwtCookie = jwtService.generateJwtCookie(registrationResponse.getToken());
 
-        registrationResponseDto.setToken(null);
+        registrationResponse.setToken(null);
 
-        return ResponseEntity.status(HttpStatus.CREATED).header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(registrationResponseDto);
+        return ResponseEntity.status(HttpStatus.CREATED).header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(registrationResponse);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto request)
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request)
     {
-        LoginResponseDto loginResponseDto = authService.login(request);
+        LoginResponse loginResponse = authService.login(request);
 
-        ResponseCookie jwtCookie = jwtService.generateJwtCookie(loginResponseDto.getToken());
+        ResponseCookie jwtCookie = jwtService.generateJwtCookie(loginResponse.getToken());
 
-        loginResponseDto.setToken(null);
+        loginResponse.setToken(null);
 
         return ResponseEntity.ok()
                              .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-                             .body(loginResponseDto);
+                             .body(loginResponse);
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<LogoutResponseDto> logout(@Valid @RequestBody LogoutRequestDto request)
+    public ResponseEntity<LogoutResponse> logout(@Valid @RequestBody LogoutRequest request)
     {
         return ResponseEntity.ok()
                              .body(authService.logout(request));

@@ -1,4 +1,4 @@
-package com.me.dto.request.auth;
+package com.me.dto.requests.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RegistrationRequestDto
+public class RegistrationRequest
 {
 	@NotBlank(message = "Email field cannot be blank")
 	@Email(message = "Invalid email format")
