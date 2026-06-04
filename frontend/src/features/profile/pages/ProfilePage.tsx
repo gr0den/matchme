@@ -1,5 +1,7 @@
+import CardFlow from "./CardFlowPage"
+
 export default function ProfilePage() {
     return (
-        <h1>This is Profile page</h1>
+        <CardFlow />
     )
 }
