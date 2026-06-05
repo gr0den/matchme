@@ -6,6 +6,7 @@ export type UserProfile = {
     interests?: number[];
     genres?: number[];
     targetGenres?: number[];
+    branchChoice?: "same" | "different";
     latitude?: number;
     longitude?: number;
     pictureUrl?: string;
@@ -25,10 +26,33 @@ export type ButtonData = {
 export type ButtonCardConfig = {
     id: string;
     title: string;
+    type: "button";
     buttonOptions?: ButtonData[];
 }
 
-type CardConfig = TextCardConfig | ButtonCardConfig
+export type QuestionCardConfig = {
+    id: string;
+    title: string;
+    type: "question";
+    options: Array<{
+        id: "same" | "different";
+        label: string;
+    }>;
+}
+
+export type LocationCardConfig = {
+    id: string;
+    title: string;
+    type: "location";
+}
+
+export type PictureCardConfig = {
+    id: string;
+    title: string;
+    type: "picture";
+}
+
+export type CardConfig = TextCardConfig | ButtonCardConfig | QuestionCardConfig | LocationCardConfig | PictureCardConfig
 
 export const mainCardFlow: CardConfig[] = [
     {id: "userName", title: "How should we call you?", type: "text"},
@@ -36,29 +60,53 @@ export const mainCardFlow: CardConfig[] = [
     {
         id: "interests",
         title: "Choose what interests you",
+        type: "button",
         buttonOptions: [
             {id: 1, name: "Reading"},
             {id: 2, name: "Travel"},
             {id: 3, name: "Cooking"},
+            {id: 4, name: "Sport"}
         ],
     },
     {
         id: "genres",
         title: "Choose what genres you like",
+        type: "button",
         buttonOptions: [
             {id: 4, name: "Fantasy"},
             {id: 5, name: "Mystery"},
             {id: 6, name: "Sci-Fi"},
         ],
     },
+    {
+        id: "branchChoice",
+        title: "Are you looking for someone with the same preferences?",
+        type: "question",
+        options: [
+            {id: "same", label: "Yes"},
+            {id: "different", label: "No"},
+        ],
+    },
 ]
 
 export const samePreferenceCardFlow: CardConfig[] = [
-
+    {id: "location", title: "Where are you located?", type: "location"},
+    {id: "picture", title: "Upload your profile picture (optional)", type: "picture"},
 ]
 
 export const differentPreferenceCardFlow: CardConfig[] = [
-
+    {
+        id: "targetGenres",
+        title: "Choose the genres you want to match with",
+        type: "button",
+        buttonOptions: [
+            {id: 4, name: "Fantasy"},
+            {id: 5, name: "Mystery"},
+            {id: 6, name: "Sci-Fi"},
+        ],
+    },
+    {id: "location", title: "Where are you located?", type: "location"},
+    {id: "picture", title: "Upload your profile picture (optional)", type: "picture"},
 ]
 
 //---------------- Card props -------------------------------------------------------------------------------------------
@@ -74,4 +122,10 @@ export type ButtonCardProps = {
     names: ButtonData[];
     selectedNames: number[];
     onToggle: (id: number) => void;
+}
+
+export type QuestionCardProps = {
+    config: QuestionCardConfig;
+    selectedOption?: "same" | "different";
+    onSelect: (id: "same" | "different") => void;
 }
