@@ -2,7 +2,7 @@ import type { ButtonCardProps } from "../types/cardTypes"
 
 export default function ButtonCard({title, names, selectedNames, onToggle}: ButtonCardProps) {
     return (
-        <div className="card">
+        <div className="button-card">
             <h2>{title}</h2>
 
             <div className="button-container">
