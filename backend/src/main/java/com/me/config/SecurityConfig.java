@@ -35,7 +35,8 @@ public class SecurityConfig
                             (
                                     "/api/auth/register",
                                     "/api/auth/login",
-                                    "/api/tags/**"
+                                    "/api/tags/**",
+                                    "/api/data/users/**"
                             )
                     .permitAll()
                     .anyRequest()

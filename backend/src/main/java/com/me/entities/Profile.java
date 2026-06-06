@@ -1,5 +1,6 @@
 package com.me.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -31,6 +32,7 @@ public class Profile
 
     private String pictureUrl;
 
+    @JsonIgnore
     @Column(columnDefinition = "geography(Point, 4326)")
     private Point location;
 
