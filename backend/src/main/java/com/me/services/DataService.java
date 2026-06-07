@@ -38,6 +38,8 @@ public class DataService
     public GenerateResponse generate(Integer amount)
     {
         List<Profile> profiles = new ArrayList<>();
+        List<User> users = new ArrayList<>();
+
         User user;
         Profile profile;
         Double longitude;
@@ -47,13 +49,15 @@ public class DataService
         List<Interest> interests = interestRepository.findAll();
         List<Genre> genres = genreRepository.findAll();
 
+
+
         for (int i = 0; i < amount; i++)
         {
             user = new User().setEmail(i + faker.internet()
                                             .emailAddress())
                              .setPassword(passwordEncoder.encode(faker.credentials()
                                                                       .password()));
-            user = userRepository.save(user);
+            users.add(user);
 
             longitude = Double.parseDouble(faker.address()
                                                 .longitude());
@@ -86,9 +90,11 @@ public class DataService
                                    .setPictureUrl(faker.avatar()
                                                        .image());
 
-            profileRepository.save(profile);
             profiles.add(profile);
         }
+
+        userRepository.saveAll(users);
+        profileRepository.saveAll(profiles);
 
         return new GenerateResponse().setProfiles(profiles);
     }
