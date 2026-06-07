@@ -1,30 +1,17 @@
 package com.me.utils;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Randomizer
 {
-    public static Long generateOneToTen()
+    public static int generateOneToNine()
     {
-        return ThreadLocalRandom.current().nextLong(1, 11);
+        return ThreadLocalRandom.current().nextInt(1, 10);
     }
 
-    public static Long generateFiveToTen()
+
+    public static int generateZeroToFive()
     {
-        return ThreadLocalRandom.current().nextLong(5, 11);
-    }
-
-    public static List<Long> generateIdList(long size)
-    {
-        List<Long> ids = new ArrayList<>();
-
-        for (int i = 0; i < size; i++)
-        {
-            ids.add(generateOneToTen());
-        }
-
-        return ids;
+        return ThreadLocalRandom.current().nextInt(0, 6);
     }
 }

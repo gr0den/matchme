@@ -16,19 +16,18 @@ import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.PrecisionModel;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class DataService
 {
-    private static final GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
+    private final PasswordEncoder passwordEncoder;
+    private final GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
     private final GenreRepository genreRepository;
@@ -45,34 +44,45 @@ public class DataService
         double latitude;
         Point coords;
 
+        List<Interest> interests = interestRepository.findAll();
+        List<Genre> genres = genreRepository.findAll();
 
         for (int i = 0; i < amount; i++)
         {
-            user = new User().setEmail(faker.internet()
+            user = new User().setEmail(i + faker.internet()
                                             .emailAddress())
-                             .setPassword(faker.credentials()
-                                               .password());
+                             .setPassword(passwordEncoder.encode(faker.credentials()
+                                                                      .password()));
             user = userRepository.save(user);
 
             longitude = Double.parseDouble(faker.address()
                                                 .longitude());
             latitude = Double.parseDouble(faker.address()
                                                .latitude());
-            Set<Genre> userGenres = new HashSet<>(genreRepository.findAllById(Randomizer.generateIdList(Randomizer.generateOneToTen())));
-            Set<Genre> targetGenres = new HashSet<>(genreRepository.findAllById(Randomizer.generateIdList(Randomizer.generateOneToTen())));
-            Set<Interest> userInterests = new HashSet<>(interestRepository.findAllById(Randomizer.generateIdList(Randomizer.generateFiveToTen())));
+
+            List<Interest> userInterests = new ArrayList<>(interests);
+            List<Genre> userGenres = new ArrayList<>(genres);
+            List<Genre> targetGenres = new ArrayList<>(genres);
+
+            Collections.shuffle(userInterests);
+            Collections.shuffle(userGenres);
+            Collections.shuffle(targetGenres);
+
+            userInterests = userInterests.subList(Randomizer.generateZeroToFive(), userInterests.size());
+            userGenres = userGenres.subList(0, Randomizer.generateOneToNine());
+            targetGenres = targetGenres.subList(0, Randomizer.generateOneToNine());
 
             coords = geometryFactory.createPoint(new Coordinate(longitude, latitude));
 
             profile = new Profile().setUsername(faker.credentials()
-                                                     .username())
+                                                     .username() + i)
                                    .setUser(user)
                                    .setBiography(faker.text()
                                                       .text(500))
                                    .setLocation(coords)
-                                   .setMyGenres(userGenres)
-                                   .setTargetGenres(targetGenres)
-                                   .setInterests(userInterests)
+                                   .setMyGenres(new HashSet<>(userGenres))
+                                   .setTargetGenres(new HashSet<>(targetGenres))
+                                   .setInterests(new HashSet<>(userInterests))
                                    .setPictureUrl(faker.avatar()
                                                        .image());
 
