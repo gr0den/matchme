@@ -1,19 +1,63 @@
 // Parent component for Card components
 // Manages card index and collects data (userProfile)
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { differentPreferenceCardFlow, mainCardFlow, samePreferenceCardFlow } from "../types/cardTypes";
 import TextCard from "../components/TextCard";
 import ButtonCard from "../components/ButtonCard";
 import QuestionCard from "../components/QuestionCard";
 import LocationCard from "../components/LocationCard";
 import PictureCard from "../components/PictureCard";
-import type { CardConfig, UserProfile } from "../types/cardTypes";
+import { fetchGenres, fetchInterests } from "../api/profileApi";
+import type { ButtonData, CardConfig, UserProfile } from "../types/cardTypes";
 
 export default function CardFlow() {
     const [currentIndex, setCurrentIndex] = useState(0)
     const [activeFlow, setActiveFlow] = useState<"main" | "same" | "different">("main")
     const [userProfile, setUserProfile] = useState<UserProfile>({})
+    const [interestsOptions, setInterestsOptions] = useState<ButtonData[]>([])
+    const [genresOptions, setGenresOptions] = useState<ButtonData[]>([])
+    const [isLoadingTags, setIsLoadingTags] = useState(true)
+    const [tagsError, setTagsError] = useState<string | null>(null)
+
+    useEffect(() => {
+        let isMounted = true
+
+        async function loadTagOptions() {
+            setIsLoadingTags(true)
+            setTagsError(null)
+
+            try {
+                const [interests, genres] = await Promise.all([
+                    fetchInterests(),
+                    fetchGenres(),
+                ])
+
+                if (!isMounted) { // check if component still exists
+                    return
+                }
+
+                setInterestsOptions(interests)
+                setGenresOptions(genres)
+            } catch (error) {
+                if (!isMounted) {
+                    return
+                }
+
+                setTagsError(error instanceof Error ? error.message : "Failed to load profile tags.")
+            } finally {
+                if (isMounted) {
+                    setIsLoadingTags(false)
+                }
+            }
+        }
+
+        loadTagOptions()
+
+        return () => { // cleanup function
+            isMounted = false
+        }
+    }, []) // empty array -> run only once per component mount
 
     function getCardsForFlow(flow: "main" | "same" | "different") {
         if (flow === "same") {
@@ -37,7 +81,7 @@ export default function CardFlow() {
         }))
     }
 
-    function toggleButtonNames(field: "interests" | "genres", value: number) {
+    function toggleButtonNames(field: "interests" | "genres" | "targetGenres", value: number) {
         setUserProfile(prev => {
             const selectedNames = prev[field] ?? []
 
@@ -100,13 +144,28 @@ export default function CardFlow() {
         }
 
         if (card.type === "button") {
+            let names = genresOptions
+            let selectedNames = userProfile.genres ?? []
+
+            if (card.id === "interests") {
+                names = interestsOptions
+                selectedNames = userProfile.interests ?? []
+            } else if (card.id === "targetGenres") {
+                names = genresOptions
+                selectedNames = userProfile.targetGenres ?? []
+            }
+
             return (
-                <ButtonCard
-                    title={card.title}
-                    names={card.buttonOptions ?? []}
-                    selectedNames={card.id === "interests" ? userProfile.interests ?? [] : userProfile.genres ?? []}
-                    onToggle={(id) => toggleButtonNames(card.id as "interests" | "genres", id)}
-                />
+                <>
+                    <ButtonCard
+                        title={card.title}
+                        names={names}
+                        selectedNames={selectedNames}
+                        onToggle={(id) => toggleButtonNames(card.id as "interests" | "genres" | "targetGenres", id)}
+                    />
+                    {isLoadingTags && <p>Loading options...</p>}
+                    {tagsError && <p role="alert">{tagsError}</p>}
+                </>
             )
         }
 
