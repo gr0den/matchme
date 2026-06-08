@@ -1,6 +1,8 @@
 import type { ButtonData } from "../types/cardTypes";
 
 const BASE_URL = "http://localhost:3000/api/tags";
+const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
 async function handleTagResponse<T>(url: string, fallbackMessage: string): Promise<T[]> {
     const response = await fetch(url, {
@@ -32,4 +34,31 @@ export async function fetchInterests(): Promise<ButtonData[]> {
     );
 
     return interests.map((interest) => ({ id: interest.id, name: interest.interest }));
+}
+
+export async function uploadProfileImage(file: File): Promise<string> {
+    if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_UPLOAD_PRESET) {
+        throw new Error("Cloudinary environment variables are not configured.");
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+    formData.append("folder", "profile-pictures");
+
+    const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
+        {
+            method: "POST",
+            body: formData,
+        }
+    );
+
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error?.message || "Image upload failed.");
+    }
+
+    const result = await response.json();
+    return result.secure_url as string;
 }

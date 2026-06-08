@@ -2,13 +2,14 @@
 // Manages card index and collects data (userProfile)
 
 import { useEffect, useState } from "react";
+import type { ChangeEvent } from "react";
 import { differentPreferenceCardFlow, mainCardFlow, samePreferenceCardFlow } from "../types/cardTypes";
 import TextCard from "../components/TextCard";
 import ButtonCard from "../components/ButtonCard";
 import QuestionCard from "../components/QuestionCard";
 import LocationCard from "../components/LocationCard";
 import PictureCard from "../components/PictureCard";
-import { fetchGenres, fetchInterests } from "../api/profileApi";
+import { fetchGenres, fetchInterests, uploadProfileImage } from "../api/profileApi";
 import type { ButtonData, CardConfig, UserProfile } from "../types/cardTypes";
 
 export default function CardFlow() {
@@ -19,6 +20,10 @@ export default function CardFlow() {
     const [genresOptions, setGenresOptions] = useState<ButtonData[]>([])
     const [isLoadingTags, setIsLoadingTags] = useState(true)
     const [tagsError, setTagsError] = useState<string | null>(null)
+    const [imageFile, setImageFile] = useState<File | null>(null)
+    const [isUploadingImage, setIsUploadingImage] = useState(false)
+    const [imageError, setImageError] = useState<string | null>(null)
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 
     useEffect(() => {
         let isMounted = true
@@ -101,6 +106,55 @@ export default function CardFlow() {
         }))
     }
 
+    function getUserCoords() {
+        if (!navigator.geolocation) {
+            console.error("Geolocation is not supported.");
+        } else {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    setUserProfile(prev => ({
+                        ...prev,
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                    }))
+                },
+                (error) => {console.error(`Unable to get user location with error code: ${error.code}`)}
+            )
+            
+        }
+    }
+
+    function handleImageChange(event: ChangeEvent<HTMLInputElement>) {
+        const file = event.target.files?.[0] ?? null
+
+        setImageFile(file)
+        setImageError(null)
+    }
+
+    async function handleImageUpload() {
+        if (!imageFile) {
+            setImageError("Choose an image before uploading.")
+            return
+        }
+
+        setIsUploadingImage(true)
+        setImageError(null)
+
+        try {
+            const uploadedUrl = await uploadProfileImage(imageFile)
+
+            setPreviewUrl(uploadedUrl)
+            setUserProfile(prev => ({
+                ...prev,
+                pictureUrl: uploadedUrl,
+            }))
+        } catch (error) {
+            setImageError(error instanceof Error ? error.message : "Image upload failed.")
+        } finally {
+            setIsUploadingImage(false)
+        }
+    }
+
     function nextCard() {
         if (activeFlow === "main" && currentIndex < mainCardFlow.length - 1) {
             setCurrentIndex(prev => prev + 1)
@@ -180,11 +234,23 @@ export default function CardFlow() {
         }
 
         if (card.type === "location") {
-            return <LocationCard />
+            return <LocationCard 
+                onClick={getUserCoords}
+            />
         }
 
         if (card.type === "picture") {
-            return <PictureCard />
+            return (
+                <>
+                    <PictureCard
+                        onChange={handleImageChange}
+                        onUpload={handleImageUpload}
+                        previewUrl={previewUrl ?? userProfile.pictureUrl}
+                        isUploading={isUploadingImage}
+                    />
+                    {imageError && <p role="alert">{imageError}</p>}
+                </>
+            )
         }
 
         return null
