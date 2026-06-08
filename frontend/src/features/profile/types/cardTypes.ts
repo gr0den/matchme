@@ -61,22 +61,11 @@ export const mainCardFlow: CardConfig[] = [
         id: "interests",
         title: "Choose what interests you",
         type: "button",
-        buttonOptions: [
-            {id: 1, name: "Reading"},
-            {id: 2, name: "Travel"},
-            {id: 3, name: "Cooking"},
-            {id: 4, name: "Sport"}
-        ],
     },
     {
         id: "genres",
         title: "Choose what genres you like",
         type: "button",
-        buttonOptions: [
-            {id: 4, name: "Fantasy"},
-            {id: 5, name: "Mystery"},
-            {id: 6, name: "Sci-Fi"},
-        ],
     },
     {
         id: "branchChoice",
@@ -99,11 +88,6 @@ export const differentPreferenceCardFlow: CardConfig[] = [
         id: "targetGenres",
         title: "Choose the genres you want to match with",
         type: "button",
-        buttonOptions: [
-            {id: 4, name: "Fantasy"},
-            {id: 5, name: "Mystery"},
-            {id: 6, name: "Sci-Fi"},
-        ],
     },
     {id: "location", title: "Where are you located?", type: "location"},
     {id: "picture", title: "Upload your profile picture (optional)", type: "picture"},
