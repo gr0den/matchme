@@ -41,4 +41,8 @@ public class CreateProfileRequest
     private Double longitude;
 
     private String pictureUrl;
+
+    @NotNull(message = "search radius cannot be null")
+    @Range(min = 1, max = 20000, message = "search radius must be within 1 to 20000 range")
+    private Integer searchRadius;
 }

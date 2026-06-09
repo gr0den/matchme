@@ -60,7 +60,8 @@ public class ProfileService
                    .setUsername(request.getUserName())
                    .setBiography(request.getBio())
                    .setPictureUrl(request.getPictureUrl())
-                   .setLocation(coords);
+                   .setLocation(coords)
+                   .setSearchRadius(request.getSearchRadius());
 
         userProfile = profileRepository.save(userProfile);
 
@@ -70,7 +71,8 @@ public class ProfileService
     @Transactional
     public UpdateProfileResponse updateProfile(UpdateProfileRequest request, Long userId)
     {
-        Profile profile = profileRepository.findById(userId).orElseThrow(() -> new ProfileNotFoundException());
+        Profile profile = profileRepository.findById(userId)
+                                           .orElseThrow(() -> new ProfileNotFoundException());
 
         if (request.getUserName() != null)
         {
@@ -109,6 +111,11 @@ public class ProfileService
         if (request.getPictureUrl() != null)
         {
             profile.setPictureUrl(request.getPictureUrl());
+        }
+
+        if (request.getSearchRadius() != null)
+        {
+            profile.setSearchRadius(request.getSearchRadius());
         }
 
         profile = profileRepository.save(profile);

@@ -26,7 +26,8 @@ CREATE TABLE user_profiles
     username VARCHAR(255) NOT NULL UNIQUE,
     biography VARCHAR(500),
     picture_url TEXT,
-    location GEOGRAPHY(Point, 4326)
+    location GEOGRAPHY(Point, 4326),
+    search_radius INTEGER NOT NULL
 );
 
 CREATE TABLE user_interests
