@@ -1,3 +1,5 @@
+import type { ChangeEvent } from "react";
+
 //---------------- Card flow -------------------------------------------------------------------------------------------
 
 export type UserProfile = {
@@ -112,4 +114,15 @@ export type QuestionCardProps = {
     config: QuestionCardConfig;
     selectedOption?: "same" | "different";
     onSelect: (id: "same" | "different") => void;
+}
+
+export type LocationCardProps = {
+    onClick: () => void;
+}
+
+export type PictureCardProps = {
+    onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+    onUpload: () => Promise<void> | void;
+    previewUrl?: string;
+    isUploading?: boolean;
 }
