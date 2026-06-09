@@ -20,7 +20,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -50,11 +53,10 @@ public class DataService
         List<Genre> genres = genreRepository.findAll();
 
 
-
         for (int i = 0; i < amount; i++)
         {
             user = new User().setEmail(i + faker.internet()
-                                            .emailAddress())
+                                                .emailAddress())
                              .setPassword(passwordEncoder.encode(faker.credentials()
                                                                       .password()));
             users.add(user);
@@ -88,7 +90,9 @@ public class DataService
                                    .setTargetGenres(new HashSet<>(targetGenres))
                                    .setInterests(new HashSet<>(userInterests))
                                    .setPictureUrl(faker.avatar()
-                                                       .image());
+                                                       .image())
+                                   .setSearchRadius(faker.number()
+                                                         .numberBetween(1, 20000));
 
             profiles.add(profile);
         }

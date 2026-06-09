@@ -18,8 +18,8 @@ VALUES
         ('Travelling'),
         ('Entrepreneurship'),
         ('Philosophy'),
-        ('Interest6'),
-        ('Interest7'),
-        ('Interest8'),
-        ('Interest9'),
-        ('Interest10');
+        ('Nature'),
+        ('Anime'),
+        ('Architecture'),
+        ('Relationships'),
+        ('Animals');

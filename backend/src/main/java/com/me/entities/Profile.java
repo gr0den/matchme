@@ -64,4 +64,6 @@ public class Profile
             )
     private Set<Genre> targetGenres;
 
+    private Integer searchRadius;
+
 }
