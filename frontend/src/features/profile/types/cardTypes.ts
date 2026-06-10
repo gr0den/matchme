@@ -12,6 +12,7 @@ export type UserProfile = {
     latitude?: number;
     longitude?: number;
     pictureUrl?: string;
+    searchRadius?: number;
 }
 
 export type TextCardConfig = {
@@ -118,6 +119,7 @@ export type QuestionCardProps = {
 
 export type LocationCardProps = {
     onClick: () => void;
+    onChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
 export type PictureCardProps = {
