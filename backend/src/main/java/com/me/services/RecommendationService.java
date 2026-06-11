@@ -13,8 +13,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RecommendationService
 {
-    UserRepository userRepository;
-    ProfileRepository profileRepository;
+    private final UserRepository userRepository;
+    private final ProfileRepository profileRepository;
 
     public List<Long> getRecommendations(Long userId)
     {

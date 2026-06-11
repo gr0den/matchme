@@ -16,12 +16,12 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/user")
+@RequestMapping("/api/user/profile")
 public class ProfileController
 {
     private final ProfileService profileService;
 
-    @PostMapping("/profile/create")
+    @PostMapping("/create")
     public ResponseEntity<CreateProfileResponse> createProfile(@AuthenticationPrincipal Long userId,
                                                                @Valid
                                                                @RequestBody
@@ -33,7 +33,7 @@ public class ProfileController
                              .body(createProfileResponse);
     }
 
-    @PatchMapping("/profile/update")
+    @PatchMapping("/update")
     public ResponseEntity<UpdateProfileResponse> updateProfile(@AuthenticationPrincipal Long userId,
                                                                @Valid
                                                                @RequestBody

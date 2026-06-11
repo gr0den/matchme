@@ -61,7 +61,7 @@ public class ProfileService
                    .setBiography(request.getBio())
                    .setPictureUrl(request.getPictureUrl())
                    .setLocation(coords)
-                   .setSearchRadius(request.getSearchRadius());
+                   .setSearchRadius(request.getSearchRadius() * 1000);
 
         userProfile = profileRepository.save(userProfile);
 
@@ -115,7 +115,7 @@ public class ProfileService
 
         if (request.getSearchRadius() != null)
         {
-            profile.setSearchRadius(request.getSearchRadius());
+            profile.setSearchRadius(request.getSearchRadius() * 1000);
         }
 
         profile = profileRepository.save(profile);

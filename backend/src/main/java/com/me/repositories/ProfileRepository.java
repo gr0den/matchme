@@ -29,6 +29,5 @@ public interface ProfileRepository extends JpaRepository<Profile, Long>
 
     boolean existsById(Long id);
 
-    Long user(User user);
 }
 
