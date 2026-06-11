@@ -4,6 +4,9 @@ import com.me.dto.requests.profile.CreateProfileRequest;
 import com.me.dto.requests.profile.UpdateProfileRequest;
 import com.me.dto.response.profile.CreateProfileResponse;
 import com.me.dto.response.profile.UpdateProfileResponse;
+import com.me.dto.response.user.UserBioResponse;
+import com.me.dto.response.user.UserProfileResponse;
+import com.me.dto.response.user.UserResponse;
 import com.me.entities.Genre;
 import com.me.entities.Interest;
 import com.me.entities.Profile;
@@ -30,8 +33,6 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class ProfileService
 {
-    private static final String MESSAGE = "TEST";
-
     private final ProfileRepository profileRepository;
     private final UserRepository userRepository;
     private final InterestRepository interestRepository;
@@ -61,7 +62,7 @@ public class ProfileService
                    .setBiography(request.getBio())
                    .setPictureUrl(request.getPictureUrl())
                    .setLocation(coords)
-                   .setSearchRadius(request.getSearchRadius() * 1000);
+                   .setSearchRadius(request.getSearchRadius());
 
         userProfile = profileRepository.save(userProfile);
 
@@ -115,7 +116,7 @@ public class ProfileService
 
         if (request.getSearchRadius() != null)
         {
-            profile.setSearchRadius(request.getSearchRadius() * 1000);
+            profile.setSearchRadius(request.getSearchRadius());
         }
 
         profile = profileRepository.save(profile);
@@ -126,5 +127,46 @@ public class ProfileService
     public boolean isOnboarded(Long userId)
     {
         return profileRepository.existsById(userId);
+    }
+
+    public UserResponse getMe(Long userId)
+    {
+        Profile profile = profileRepository
+                .findById(userId)
+                .orElseThrow(() -> new ProfileNotFoundException());
+
+        return new UserResponse().setId(profile.getId())
+                                 .setUserName(profile.getUsername())
+                                 .setPictureUrl(profile.getPictureUrl());
+    }
+
+    public UserProfileResponse getMeProfile(Long userId)
+    {
+        Profile profile = profileRepository
+                .findById(userId)
+                .orElseThrow(() -> new ProfileNotFoundException());
+
+        return new UserProfileResponse().setId(profile.getId())
+                                        .setBio(profile.getBiography());
+    }
+
+    public UserBioResponse getMeBio(Long userId)
+    {
+        Profile profile = profileRepository
+                .findById(userId)
+                .orElseThrow(() -> new ProfileNotFoundException());
+
+        Double longitude = profile.getLocation()
+                                  .getX();
+        Double latitude = profile.getLocation()
+                                 .getY();
+
+        return new UserBioResponse().setId(profile.getId())
+                                    .setGenres(profile.getMyGenres())
+                                    .setTargetGenres(profile.getTargetGenres())
+                                    .setInterests(profile.getInterests())
+                                    .setLongitude(longitude)
+                                    .setLatitude(latitude)
+                                    .setSearchRadius(profile.getSearchRadius());
     }
 }
