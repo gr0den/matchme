@@ -64,6 +64,7 @@ public class Profile
             )
     private Set<Genre> targetGenres;
 
+    @Column(name = "search_radius")
     private Integer searchRadius;
 
 }

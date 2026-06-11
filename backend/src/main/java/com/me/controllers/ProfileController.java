@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
@@ -41,5 +43,14 @@ public class ProfileController
 
         return ResponseEntity.ok()
                              .body(updateProfileResponse);
+    }
+
+    @GetMapping("/onboarded")
+    public ResponseEntity<Map<String, Boolean>> isOnboarded(@AuthenticationPrincipal Long userId)
+    {
+        boolean isOnboarded = profileService.isOnboarded(userId);
+
+        return ResponseEntity.ok()
+                             .body(Map.of("onboarded", isOnboarded));
     }
 }

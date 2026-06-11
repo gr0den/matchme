@@ -122,4 +122,9 @@ public class ProfileService
 
         return ProfileMapper.toUpdateProfileResponse(profile);
     }
+
+    public boolean isOnboarded(Long userId)
+    {
+        return profileRepository.existsById(userId);
+    }
 }
