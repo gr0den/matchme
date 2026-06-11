@@ -15,7 +15,7 @@ public interface ProfileRepository extends JpaRepository<Profile, Long>
                   FROM user_profiles p
                   WHERE ST_DWithin(p.location,
                               ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography,
-                                           LEAST(p.search_radius, :searchRadius)) 
+                                           LEAST(p.search_radius * 1000, :searchRadius * 1000)) 
                   AND p.user_id != :currentUserId
                   LIMIT 10
             """,

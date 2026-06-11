@@ -92,7 +92,7 @@ public class DataService
                                    .setPictureUrl(faker.avatar()
                                                        .image())
                                    .setSearchRadius(faker.number()
-                                                         .numberBetween(1000, 20000000));
+                                                         .numberBetween(1, 20000));
 
             profiles.add(profile);
         }
