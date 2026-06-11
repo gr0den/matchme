@@ -1,4 +1,4 @@
-package com.me.controllers;
+package com.me.controllers.util;
 
 import com.me.dto.response.data.GenerateResponse;
 import com.me.services.DataService;

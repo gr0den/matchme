@@ -2,37 +2,37 @@ CREATE EXTENSION IF NOT EXISTS postgis;
 
 CREATE TABLE users
 (
-    id BIGSERIAL PRIMARY KEY,
-    email VARCHAR(255) NOT NULL UNIQUE,
+    id       BIGSERIAL PRIMARY KEY,
+    email    VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE genres
 (
-    id BIGSERIAL PRIMARY KEY,
+    id    BIGSERIAL PRIMARY KEY,
     genre VARCHAR(255) NOT NULL UNIQUE
 );
 
 CREATE TABLE interests
 (
-    id BIGSERIAL PRIMARY KEY,
+    id       BIGSERIAL PRIMARY KEY,
     interest VARCHAR(255) NOT NULL UNIQUE
 );
 
 CREATE TABLE user_profiles
 (
-    user_id BIGINT PRIMARY KEY,
+    user_id       BIGINT PRIMARY KEY,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
-    username VARCHAR(255) NOT NULL UNIQUE,
-    biography VARCHAR(500),
-    picture_url TEXT,
-    location GEOGRAPHY(Point, 4326),
-    search_radius INTEGER NOT NULL
+    username      VARCHAR(255)           NOT NULL UNIQUE,
+    biography     VARCHAR(500),
+    picture_url   TEXT,
+    location      GEOGRAPHY(Point, 4326) NOT NULL,
+    search_radius INTEGER                NOT NULL
 );
 
 CREATE TABLE user_interests
 (
-    user_id BIGINT NOT NULL,
+    user_id     BIGINT NOT NULL,
     interest_id BIGINT NOT NULL,
     PRIMARY KEY (user_id, interest_id),
     FOREIGN KEY (user_id) REFERENCES user_profiles (user_id) ON DELETE CASCADE,
@@ -41,7 +41,7 @@ CREATE TABLE user_interests
 
 CREATE TABLE user_genres
 (
-    user_id BIGINT NOT NULL,
+    user_id  BIGINT NOT NULL,
     genre_id BIGINT NOT NULL,
     PRIMARY KEY (user_id, genre_id),
     FOREIGN KEY (user_id) REFERENCES user_profiles (user_id) ON DELETE CASCADE,
@@ -50,7 +50,7 @@ CREATE TABLE user_genres
 
 CREATE TABLE user_target_genres
 (
-    user_id BIGINT NOT NULL,
+    user_id  BIGINT NOT NULL,
     genre_id BIGINT NOT NULL,
     PRIMARY KEY (user_id, genre_id),
     FOREIGN KEY (user_id) REFERENCES user_profiles (user_id) ON DELETE CASCADE,
