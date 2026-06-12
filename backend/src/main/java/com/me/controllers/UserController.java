@@ -31,7 +31,7 @@ public class UserController
         return getUserProfile(userId);
     }
 
-    @GetMapping("me/bio")
+    @GetMapping("/me/bio")
     public ResponseEntity<UserBioResponse> getMeBio(@AuthenticationPrincipal Long userId)
     {
         return getUserBio(userId);
