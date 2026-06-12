@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,25 +22,43 @@ public class UserController
     @GetMapping("/me")
     public ResponseEntity<UserResponse> getMe(@AuthenticationPrincipal Long userId)
     {
-        UserResponse meResponse = profileService.getMe(userId);
-
-        return ResponseEntity.ok()
-                             .body(meResponse);
+        return getUser(userId);
     }
 
     @GetMapping("/me/profile")
     public ResponseEntity<UserProfileResponse> getMeProfile(@AuthenticationPrincipal Long userId)
     {
-        UserProfileResponse meProfileResponse = profileService.getMeProfile(userId);
+        return getUserProfile(userId);
+    }
+
+    @GetMapping("/me/bio")
+    public ResponseEntity<UserBioResponse> getMeBio(@AuthenticationPrincipal Long userId)
+    {
+        return getUserBio(userId);
+    }
+
+    @GetMapping("/users/{id}")
+    public ResponseEntity<UserResponse> getUser(@PathVariable Long id)
+    {
+        UserResponse userResponse = profileService.getUser(id);
+
+        return ResponseEntity.ok()
+                             .body(userResponse);
+    }
+
+    @GetMapping("/users/{id}/profile")
+    public ResponseEntity<UserProfileResponse> getUserProfile(@PathVariable Long id)
+    {
+        UserProfileResponse meProfileResponse = profileService.getUserProfile(id);
 
         return ResponseEntity.ok()
                              .body(meProfileResponse);
     }
 
-    @GetMapping("me/bio")
-    public ResponseEntity<UserBioResponse> getMeBio(@AuthenticationPrincipal Long userId)
+    @GetMapping("/users/{id}/bio")
+    public ResponseEntity<UserBioResponse> getUserBio(@PathVariable Long id)
     {
-        UserBioResponse userBioResponse = profileService.getMeBio(userId);
+        UserBioResponse userBioResponse = profileService.getUserBio(id);
 
         return ResponseEntity.ok()
                              .body(userBioResponse);
