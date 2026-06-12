@@ -38,10 +38,12 @@ public class ProfileService
     private final InterestRepository interestRepository;
     private final GenreRepository genreRepository;
 
-    private static final GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
+    private static final GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(),
+                                                                               4326);
 
     @Transactional
-    public CreateProfileResponse createProfile(CreateProfileRequest request, Long userId)
+    public CreateProfileResponse createProfile(CreateProfileRequest request,
+                                               Long userId)
     {
         User user = userRepository.findById(userId)
                                   .orElseThrow(() -> new UserNotFoundException());
@@ -50,7 +52,8 @@ public class ProfileService
         Set<Genre> userGenres = new HashSet<>(genreRepository.findAllById(request.getGenres()));
         Set<Genre> userTargetGenres = new HashSet<>(genreRepository.findAllById(request.getTargetGenres()));
 
-        Point coords = geometryFactory.createPoint(new Coordinate(request.getLongitude(), request.getLatitude()));
+        Point coords = geometryFactory.createPoint(new Coordinate(request.getLongitude(),
+                                                                  request.getLatitude()));
 
         Profile userProfile = new Profile();
 
@@ -70,7 +73,8 @@ public class ProfileService
     }
 
     @Transactional
-    public UpdateProfileResponse updateProfile(UpdateProfileRequest request, Long userId)
+    public UpdateProfileResponse updateProfile(UpdateProfileRequest request,
+                                               Long userId)
     {
         Profile profile = profileRepository.findById(userId)
                                            .orElseThrow(() -> new ProfileNotFoundException());
@@ -105,7 +109,8 @@ public class ProfileService
 
         if (request.getLatitude() != null && request.getLongitude() != null)
         {
-            Point coords = geometryFactory.createPoint(new Coordinate(request.getLongitude(), request.getLatitude()));
+            Point coords = geometryFactory.createPoint(new Coordinate(request.getLongitude(),
+                                                                      request.getLatitude()));
             profile.setLocation(coords);
         }
 
@@ -129,7 +134,7 @@ public class ProfileService
         return profileRepository.existsById(userId);
     }
 
-    public UserResponse getMe(Long userId)
+    public UserResponse getUser(Long userId)
     {
         Profile profile = profileRepository
                 .findById(userId)
@@ -140,7 +145,7 @@ public class ProfileService
                                  .setPictureUrl(profile.getPictureUrl());
     }
 
-    public UserProfileResponse getMeProfile(Long userId)
+    public UserProfileResponse getUserProfile(Long userId)
     {
         Profile profile = profileRepository
                 .findById(userId)
@@ -150,7 +155,7 @@ public class ProfileService
                                         .setBio(profile.getBiography());
     }
 
-    public UserBioResponse getMeBio(Long userId)
+    public UserBioResponse getUserBio(Long userId)
     {
         Profile profile = profileRepository
                 .findById(userId)
