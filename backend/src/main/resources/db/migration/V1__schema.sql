@@ -56,3 +56,10 @@ CREATE TABLE user_target_genres
     FOREIGN KEY (user_id) REFERENCES user_profiles (user_id) ON DELETE CASCADE,
     FOREIGN KEY (genre_id) REFERENCES genres (id) ON DELETE CASCADE
 );
+
+CREATE TABLE user_connections
+(
+    user_id       BIGINT      NOT NULL,
+    connection_id BIGINT      NOT NULL,
+    status        VARCHAR(10) NOT NULL
+)
