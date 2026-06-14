@@ -1,6 +1,9 @@
 package com.me.dto.requests.profile;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -28,7 +31,7 @@ public class CreateProfileRequest
     @Size(min = 1, max = 10, message = "Amount of selected genres must be between 1 and 10")
     private Set<Long> genres;
 
-    @NotEmpty(message = "Target genres set cannot be empty")
+    @NotEmpty(message = "Target set cannot be empty")
     @Size(min = 1, max = 10, message = "Amount of selected genres must be between 1 and 10")
     private Set<Long> targetGenres;
 
