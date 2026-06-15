@@ -9,8 +9,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -24,6 +24,7 @@ import java.util.Arrays;
 public class JwtAuthenticationFilter extends OncePerRequestFilter
 {
     private final JwtService jwtService;
+    private final StringRedisTemplate redis;
 
     @Override
     protected void doFilterInternal(@NotNull HttpServletRequest request,
@@ -43,7 +44,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter
         }
 
 
-        if (token != null && jwtService.isTokenValid(token))
+        if (token != null && jwtService.isTokenValid(token) && !redis.hasKey(token))
         {
             Long userId = jwtService.getUserId(token);
 
