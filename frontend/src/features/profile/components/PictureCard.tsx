@@ -1,6 +1,6 @@
 import type { PictureCardProps } from "../types/cardTypes"
 
-export default function PictureCard({ onChange, onUpload, previewUrl, isUploading }: PictureCardProps) {
+export default function PictureCard({ onChange, onUpload, previewUrl, isUploading, error }: PictureCardProps) {
     return (
         <div className="location-card">
             <h2>Upload your profile picture (optional)</h2>
@@ -18,6 +18,12 @@ export default function PictureCard({ onChange, onUpload, previewUrl, isUploadin
                     {isUploading ? "Uploading..." : "Upload image"}
                 </button>
             </div>
+
+            {error && (
+                <div style={{ color: "red", marginTop: "0.5rem", fontSize: "0.875rem" }}>
+                    {error}
+                </div>
+            )}
 
             {previewUrl && (
                 <div style={{ marginTop: "0.75rem" }}>

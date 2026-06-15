@@ -5,6 +5,7 @@ const BASE_URL = "http://localhost:3000/api/auth";
 export async function loginUser(credentials: LoginCredentials): Promise<LoginResponseDto> {
     const request = await fetch(`${BASE_URL}/login`, { // (await fetch): if no internet or backend offline -> automatically throws error
         method: "POST",
+        credentials: "include",
         headers: {
             "Content-Type": "application/json",
         },
@@ -25,6 +26,7 @@ export async function loginUser(credentials: LoginCredentials): Promise<LoginRes
 export async function registerUser(credentials: RegiterCredentials): Promise<RegistrationResponseDto> {
     const request = await fetch(`${BASE_URL}/register`, { 
         method: "POST",
+        credentials: "include",
         headers: {
             "Content-Type": "application/json",
         },

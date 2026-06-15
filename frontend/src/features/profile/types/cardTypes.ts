@@ -102,6 +102,7 @@ export type TextCardProps = {
     config: TextCardConfig;
     value: string;
     onChange: (id: string, value: string) => void;
+    error?: string | null;
 }
 
 export type ButtonCardProps = {
@@ -109,17 +110,20 @@ export type ButtonCardProps = {
     names: ButtonData[];
     selectedNames: number[];
     onToggle: (id: number) => void;
+    error?: string | null;
 }
 
 export type QuestionCardProps = {
     config: QuestionCardConfig;
     selectedOption?: "same" | "different";
     onSelect: (id: "same" | "different") => void;
+    error?: string | null;
 }
 
 export type LocationCardProps = {
     onClick: () => void;
     onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+    error?: string | null;
 }
 
 export type PictureCardProps = {
@@ -127,4 +131,53 @@ export type PictureCardProps = {
     onUpload: () => Promise<void> | void;
     previewUrl?: string;
     isUploading?: boolean;
+    error?: string | null;
+}
+
+//---------------- Profile update -------------------------------------------------------------------------------------------
+
+export type Genre = {
+    id: number;
+    genre: string;
+}
+
+export type Interest = {
+    id: number;
+    interest: string;
+}
+
+export type EditProfileForm = {
+    userId: number;
+    longitude: number;
+    latitude: number;
+    searchRadius: number;
+    interests: Interest[];
+    genres: Genre[];
+    targetGenres: Genre[];
+
+    bio: string;
+
+    userName: string;
+    pictureUrl: string;
+}
+
+export type MeResponse = {
+    id: number;
+    userName: string;
+    pictureUrl: string;
+}
+
+export type ProfileResponse = {
+    id: number;
+    bio: string;
+}
+
+export type BioResponse = {
+    id: number;
+    longitude: number;
+    latitude: number;
+    interests: Interest[];
+    genres: Genre[];
+    targetGenres: Genre[];
+    searchRadius: number;
 }

@@ -1,6 +1,6 @@
 import type { ButtonCardProps } from "../types/cardTypes"
 
-export default function ButtonCard({title, names, selectedNames, onToggle}: ButtonCardProps) {
+export default function ButtonCard({ title, names, selectedNames, onToggle, error }: ButtonCardProps) {
     return (
         <div className="button-card">
             <h2>{title}</h2>
@@ -15,6 +15,12 @@ export default function ButtonCard({title, names, selectedNames, onToggle}: Butt
                     >{item.name}</button>
                 ))}
             </div>
+
+            {error && (
+                <div style={{ color: "red", marginTop: "0.5rem", fontSize: "0.875rem" }}>
+                    {error}
+                </div>
+            )}
         </div>
     )
 }

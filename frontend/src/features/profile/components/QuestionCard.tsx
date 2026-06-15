@@ -1,6 +1,6 @@
 import type { QuestionCardProps } from "../types/cardTypes"
 
-export default function QuestionCard({ config, selectedOption, onSelect }: QuestionCardProps) {
+export default function QuestionCard({ config, selectedOption, onSelect, error }: QuestionCardProps) {
     return (
         <div className="question-card">
             <h2>{config.title}</h2>
@@ -16,6 +16,12 @@ export default function QuestionCard({ config, selectedOption, onSelect }: Quest
                     </button>
                 ))}
             </div>
+
+            {error && (
+                <div style={{ color: "red", marginTop: "0.5rem", fontSize: "0.875rem" }}>
+                    {error}
+                </div>
+            )}
         </div>
     )
 }

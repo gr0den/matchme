@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { ChangeEvent } from "react";
 import { fetchGenres, fetchInterests, uploadProfileImage } from "../api/profileApi";
 import type { ButtonData, UserProfile } from "../types/cardTypes";
+import { useFieldErrors } from "../errorHandling/useFieldErrors";
 
 export function useUserProfile() {
     const [userProfile, setUserProfile] = useState<UserProfile>({})
@@ -13,6 +14,8 @@ export function useUserProfile() {
     const [isUploadingImage, setIsUploadingImage] = useState(false)
     const [imageError, setImageError] = useState<string | null>(null)
     const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+
+    const { fieldErrors, validateCard, clearFieldError, clearAllErrors } = useFieldErrors()
 
     useEffect(() => {
         let isMounted = true
@@ -148,6 +151,10 @@ export function useUserProfile() {
         isUploadingImage,
         imageError,
         previewUrl,
+        fieldErrors,
+        validateCard,
+        clearFieldError,
+        clearAllErrors,
         handleChange,
         toggleButtonNames,
         handleBranchChoice,
