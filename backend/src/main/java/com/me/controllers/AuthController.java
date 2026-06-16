@@ -1,7 +1,6 @@
 package com.me.controllers;
 
 import com.me.dto.requests.auth.LoginRequest;
-import com.me.dto.requests.auth.LogoutRequest;
 import com.me.dto.requests.auth.RegistrationRequest;
 import com.me.dto.response.auth.LoginResponse;
 import com.me.dto.response.auth.LogoutResponse;
@@ -14,10 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -31,12 +27,14 @@ public class AuthController
     public ResponseEntity<RegistrationResponse> register(@Valid @RequestBody RegistrationRequest request)
     {
         RegistrationResponse registrationResponse = authService.register(request);
-        
+
         ResponseCookie jwtCookie = jwtService.generateJwtCookie(registrationResponse.getToken());
 
         registrationResponse.setToken(null);
 
-        return ResponseEntity.status(HttpStatus.CREATED).header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(registrationResponse);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                             .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                             .body(registrationResponse);
     }
 
     @PostMapping("/login")
@@ -54,9 +52,14 @@ public class AuthController
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<LogoutResponse> logout(@Valid @RequestBody LogoutRequest request)
+    public ResponseEntity<LogoutResponse> logout(@CookieValue(name = "jwtCookie") String token)
     {
+        if (token == null)
+        {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         return ResponseEntity.ok()
-                             .body(authService.logout(request));
+                             .body(authService.logout(token));
     }
 }

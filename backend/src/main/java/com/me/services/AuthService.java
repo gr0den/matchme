@@ -1,7 +1,6 @@
 package com.me.services;
 
 import com.me.dto.requests.auth.LoginRequest;
-import com.me.dto.requests.auth.LogoutRequest;
 import com.me.dto.requests.auth.RegistrationRequest;
 import com.me.dto.response.auth.LoginResponse;
 import com.me.dto.response.auth.LogoutResponse;
@@ -24,61 +23,60 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class AuthService
 {
-	private final AuthRepository authRepository;
-	private final PasswordEncoder passwordEncoder;
-	private final JwtService jwtService;
-	private final StringRedisTemplate redis;
+    private final AuthRepository authRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+    private final StringRedisTemplate redis;
 
-	@Transactional
-	public RegistrationResponse register(RegistrationRequest request)
-	{
-		boolean isExist = authRepository.existsByEmail(request.getEmail());
+    @Transactional
+    public RegistrationResponse register(RegistrationRequest request)
+    {
+        boolean isExist = authRepository.existsByEmail(request.getEmail());
 
-		if (isExist)
-		{
-			throw new UserAlreadyExistsException("User already exists");
-		}
+        if (isExist)
+        {
+            throw new UserAlreadyExistsException("User already exists");
+        }
 
-		User user = AuthMapper.toUser(request);
+        User user = AuthMapper.toUser(request);
 
-		String encodedPassword = passwordEncoder.encode(request.getPassword());
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
 
-		user.setPassword(encodedPassword);
+        user.setPassword(encodedPassword);
 
-		User savedUser = authRepository.save(user);
+        User savedUser = authRepository.save(user);
 
         String token = jwtService.generateToken(savedUser);
 
-		return AuthMapper.toRegistrationResponseDto(savedUser, token);
-	}
+        return AuthMapper.toRegistrationResponseDto(savedUser, token);
+    }
 
-	public LoginResponse login(LoginRequest request)
-	{
-		User user = authRepository.findByEmail(request.getEmail())
-		                          .orElseThrow(() -> new UserNotFoundException());
+    public LoginResponse login(LoginRequest request)
+    {
+        User user = authRepository.findByEmail(request.getEmail())
+                                  .orElseThrow(() -> new UserNotFoundException());
 
-		boolean isPasswordMatch = passwordEncoder.matches(request.getPassword(), user.getPassword());
+        boolean isPasswordMatch = passwordEncoder.matches(request.getPassword(), user.getPassword());
 
-		if (!isPasswordMatch) throw new InvalidCredentialsException("Invalid credentials");
+        if (!isPasswordMatch) throw new InvalidCredentialsException("Invalid credentials");
 
-		String token = jwtService.generateToken(user);
+        String token = jwtService.generateToken(user);
 
-		return AuthMapper.toLoginResponseDto(user, token);
-	}
+        return AuthMapper.toLoginResponseDto(user, token);
+    }
 
-	public LogoutResponse logout(LogoutRequest request)
-	{
-		String token = request.getToken();
+    public LogoutResponse logout(String token)
+    {
 
-		long tokenLeftTime = jwtService.getExpirationDate(token).getTime() - System.currentTimeMillis();
+        long tokenLeftTime = jwtService.getExpirationDate(token).getTime() - System.currentTimeMillis();
 
-		if (tokenLeftTime > 0)
-		{
-			redis.opsForValue().set(token, "blacklisted", tokenLeftTime, TimeUnit.MILLISECONDS);
+        if (tokenLeftTime > 0)
+        {
+            redis.opsForValue().set(token, "blacklisted", tokenLeftTime, TimeUnit.MILLISECONDS);
 
-			return AuthMapper.toLogoutResponseDto("User is successfully logged out");
-		}
+            return AuthMapper.toLogoutResponseDto("User is successfully logged out");
+        }
 
-		return AuthMapper.toLogoutResponseDto("User token is already expired");
-	}
+        return AuthMapper.toLogoutResponseDto("User token is already expired");
+    }
 }
