@@ -3,7 +3,6 @@ package com.me.controllers;
 import com.me.dto.requests.auth.LoginRequest;
 import com.me.dto.requests.auth.RegistrationRequest;
 import com.me.dto.response.auth.LoginResponse;
-import com.me.dto.response.auth.LogoutResponse;
 import com.me.dto.response.auth.RegistrationResponse;
 import com.me.services.AuthService;
 import com.me.services.JwtService;
@@ -13,7 +12,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -49,17 +51,5 @@ public class AuthController
         return ResponseEntity.ok()
                              .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                              .body(loginResponse);
-    }
-
-    @PostMapping("/logout")
-    public ResponseEntity<LogoutResponse> logout(@CookieValue(name = "jwtCookie") String token)
-    {
-        if (token == null)
-        {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        return ResponseEntity.ok()
-                             .body(authService.logout(token));
     }
 }
