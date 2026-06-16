@@ -15,6 +15,18 @@ export type UserProfile = {
     searchRadius?: number;
 }
 
+export type UserProfileCreation = {
+    userName: string;
+    bio: string;
+    interests: number[];
+    genres: number[];
+    targetGenres: number[];
+    latitude: number;
+    longitude: number;
+    pictureUrl?: string;
+    searchRadius: number;
+}
+
 export type TextCardConfig = {
     id: string;
     title: string;

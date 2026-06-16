@@ -14,9 +14,8 @@ export async function loginUser(credentials: LoginCredentials): Promise<LoginRes
 
     if (!request.ok) {
        
-        const errorData = await request.json()
-        console.log(errorData)
-        throw new Error(errorData.error || "An error occured")
+        const errorData = await request.json().catch(() => ({}))
+        throw new Error(errorData.error || "Failed to fetch login.")
     }
 
     const result = await request.json()
@@ -34,29 +33,26 @@ export async function registerUser(credentials: RegiterCredentials): Promise<Reg
     })
 
     if (!request.ok) {
-            const errorData = await request.json()
-            console.log(errorData)
-            throw new Error(errorData.error || "An error occured")
+            const errorData = await request.json().catch(() => ({}))
+            throw new Error(errorData.error || "Failed to fetch register.")
     }
 
     const result = await request.json()
     return result
 }
 
-//export async function logout(credentials: ) {
-//    const response = await fetch(`${BASE_URL}/logout`, {
-//        method: "POST",
-//        headers: {
-//            "Content-Type": "application/json",
-//        },
-//        body: JSON.stringify(credentials),
-//    })
-//
-//    if (!response.ok) {
-//        throw new Error("Invalid email or password")
-//    }
-//
-//    const result = await response.json()
-//
-//    return result
-//}
+export async function logout(): Promise<{message: string}> {
+    const request = await fetch(`${BASE_URL}/logout`, {
+        method: "POST",
+        credentials: "include",
+    })
+
+    if (!request.ok) {
+            const errorData = await request.json().catch(() => ({}))
+            throw new Error(errorData.error || "Failed to fetch logout.")
+    }
+
+    const result = await request.json()
+
+    return result
+}

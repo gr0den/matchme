@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import CardFlow from "./CardFlowPage"
 import UpdateProfilePage from "./UpdateProfilePage"
 import { getOnboarded } from '../api/profileApi'
+import NavBar from '../../../shared/components/ui/navbar/navbar'
 
 export default function ProfilePage() {
     const [view, setView] = useState<'cardFlow' | 'updateProfile'>('cardFlow')
@@ -45,8 +46,7 @@ export default function ProfilePage() {
 
     return (
         <>
-
-
+            <NavBar />
 
             <button onClick={() => setView('cardFlow')}>Card Flow</button>
             <button onClick={() => setView('updateProfile')}>Update Page</button>

@@ -33,6 +33,7 @@ export default function CardFlow() {
         imageError,
         previewUrl,
         isUploadingImage,
+        submitUserProfile,
     } = useUserProfile()
 
     function getCardsForFlow(flow: "main" | "same" | "different") {
@@ -210,10 +211,14 @@ export default function CardFlow() {
             <div>
                 <button onClick={prevCard} disabled={activeFlow === "main" && currentIndex === 0}>Back</button>
                 <button
-                    onClick={nextCard}
+                    onClick={//nextCard
+                        currentCard.type === "picture" ? submitUserProfile : nextCard
+                    }
                     disabled={activeFlow === "main" && currentIndex === mainCardFlow.length - 1 && !userProfile.branchChoice}
                 >
-                    {activeFlow === "main" ? "Next" : "Continue"}
+                    {//activeFlow === "main" ? "Next" : "Continue"
+                        currentCard.type === "picture" ? "Submit" : "Next"
+                    }
                 </button>
                 {renderUserObject()}
             </div>

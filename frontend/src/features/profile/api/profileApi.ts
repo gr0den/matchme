@@ -1,4 +1,4 @@
-import type { ButtonData, MeResponse, ProfileResponse, BioResponse } from "../types/cardTypes";
+import type { ButtonData, MeResponse, ProfileResponse, BioResponse, UserProfileCreation } from "../types/cardTypes";
 
 const BASE_URL = "http://localhost:3000/api";
 const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
@@ -135,18 +135,22 @@ export async function getOnboarded(): Promise<boolean> {
     return onboardedResult.onboarded;
 }
 
-export async function createUser(): Promise<{userId: number, message: string}> {
+export async function createProfile(profile: UserProfileCreation): Promise<{userId: number, message: string}> {
     const response = await fetch(
         `${BASE_URL}/user/profile/create`,
         {
             method: "POST",
             credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(profile),
         }
     );
 
     if (!response.ok) {
         const errorData= await response.json().catch(() => ({}))
-        throw new Error(errorData.error?.message || "Failed to create user.")
+        throw new Error(errorData.error?.message || "Failed to create profile.")
     }
 
     const createResult = await response.json();
