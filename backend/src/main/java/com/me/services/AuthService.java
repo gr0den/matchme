@@ -3,7 +3,6 @@ package com.me.services;
 import com.me.dto.requests.auth.LoginRequest;
 import com.me.dto.requests.auth.RegistrationRequest;
 import com.me.dto.response.auth.LoginResponse;
-import com.me.dto.response.auth.LogoutResponse;
 import com.me.dto.response.auth.RegistrationResponse;
 import com.me.entities.User;
 import com.me.exceptions.InvalidCredentialsException;
@@ -16,8 +15,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -63,20 +60,5 @@ public class AuthService
         String token = jwtService.generateToken(user);
 
         return AuthMapper.toLoginResponseDto(user, token);
-    }
-
-    public LogoutResponse logout(String token)
-    {
-
-        long tokenLeftTime = jwtService.getExpirationDate(token).getTime() - System.currentTimeMillis();
-
-        if (tokenLeftTime > 0)
-        {
-            redis.opsForValue().set(token, "blacklisted", tokenLeftTime, TimeUnit.MILLISECONDS);
-
-            return AuthMapper.toLogoutResponseDto("User is successfully logged out");
-        }
-
-        return AuthMapper.toLogoutResponseDto("User token is already expired");
     }
 }

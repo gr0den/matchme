@@ -1,5 +1,6 @@
 package com.me.config;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +25,8 @@ public class SecurityConfig
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http)
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,
+                                                   RedisLogoutHandler redisLogoutHandler) throws Exception
     {
         // Disable special csrf check and allow specific auth requests to be passed to backend without token.
         // Other requests will require token.
@@ -42,7 +44,20 @@ public class SecurityConfig
                     .permitAll()
                     .anyRequest()
                     .authenticated())
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .logout(logout -> logout
+                    .logoutUrl("/api/auth/logout")
+                    .addLogoutHandler(redisLogoutHandler)
+                    .deleteCookies("jwtCookie")
+                    .clearAuthentication(true)
+                    .logoutSuccessHandler((request, response, authentication) ->
+                                          {
+                                              response.setStatus(HttpServletResponse.SC_OK);
+                                              response.setContentType("application/json");
+                                              response.getWriter()
+                                                      .write("{\"message\": \"User is successfully logged out\"}");
+                                              response.getWriter().flush();
+                                          }));
 
         return http.build();
     }
