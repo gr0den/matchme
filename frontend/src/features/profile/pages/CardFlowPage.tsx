@@ -20,6 +20,9 @@ export default function CardFlow() {
         genresOptions,
         isLoadingTags,
         tagsError,
+        fieldErrors,
+        validateCard,
+        clearFieldError,
         handleChange,
         toggleButtonNames,
         handleBranchChoice,
@@ -30,6 +33,7 @@ export default function CardFlow() {
         imageError,
         previewUrl,
         isUploadingImage,
+        submitUserProfile,
     } = useUserProfile()
 
     function getCardsForFlow(flow: "main" | "same" | "different") {
@@ -47,7 +51,43 @@ export default function CardFlow() {
     const cards = getCardsForFlow(activeFlow)
     const currentCard = cards[currentIndex]
 
+    function handleChangeWithErrorClear(id: string, value: string) {
+        handleChange(id, value)
+        clearFieldError(id)
+    }
+
+    function handleToggleWithErrorClear(field: "interests" | "genres" | "targetGenres", id: number) {
+        toggleButtonNames(field, id)
+        clearFieldError(field)
+    }
+
+    function handleBranchChoiceWithErrorClear(value: "same" | "different") {
+        handleBranchChoice(value)
+        clearFieldError("branchChoice")
+    }
+
+    function handleGetUserCoordsWithErrorClear() {
+        getUserCoords()
+        clearFieldError("location")
+    }
+
+    function handleGetSearchRadiusWithErrorClear(event: React.ChangeEvent<HTMLInputElement>) {
+        getSearchRadius(event)
+        clearFieldError("location")
+    }
+
+    function handleImageChangeWithErrorClear(event: React.ChangeEvent<HTMLInputElement>) {
+        handleImageChange(event)
+        clearFieldError("picture")
+    }
+
     function nextCard() {
+        // Validate current card before proceeding
+        const error = validateCard(currentCard.id, userProfile)
+        if (error) {
+            return
+        }
+
         if (activeFlow === "main" && currentIndex < mainCardFlow.length - 1) {
             setCurrentIndex(prev => prev + 1)
             return
@@ -84,7 +124,8 @@ export default function CardFlow() {
                 <TextCard
                     config={card}
                     value={card.id === "userName" ? userProfile.userName ?? "" : userProfile.bio ?? ""}
-                    onChange={handleChange}
+                    onChange={handleChangeWithErrorClear}
+                    error={fieldErrors[card.id]}
                 />
             )
         }
@@ -107,7 +148,8 @@ export default function CardFlow() {
                         title={card.title}
                         names={names}
                         selectedNames={selectedNames}
-                        onToggle={(id) => toggleButtonNames(card.id as "interests" | "genres" | "targetGenres", id)}
+                        onToggle={(id) => handleToggleWithErrorClear(card.id as "interests" | "genres" | "targetGenres", id)}
+                        error={fieldErrors[card.id]}
                     />
                     {isLoadingTags && <p>Loading options...</p>}
                     {tagsError && <p role="alert">{tagsError}</p>}
@@ -120,15 +162,17 @@ export default function CardFlow() {
                 <QuestionCard
                     config={card}
                     selectedOption={userProfile.branchChoice}
-                    onSelect={handleBranchChoice}
+                    onSelect={handleBranchChoiceWithErrorClear}
+                    error={fieldErrors[card.id]}
                 />
             )
         }
 
         if (card.type === "location") {
             return <LocationCard 
-                onClick={getUserCoords}
-                onChange={getSearchRadius}
+                onClick={handleGetUserCoordsWithErrorClear}
+                onChange={handleGetSearchRadiusWithErrorClear}
+                error={fieldErrors[card.id]}
             />
         }
 
@@ -136,10 +180,11 @@ export default function CardFlow() {
             return (
                 <>
                     <PictureCard
-                        onChange={handleImageChange}
+                        onChange={handleImageChangeWithErrorClear}
                         onUpload={handleImageUpload}
                         previewUrl={previewUrl ?? userProfile.pictureUrl}
                         isUploading={isUploadingImage}
+                        error={fieldErrors[card.id]}
                     />
                     {imageError && <p role="alert">{imageError}</p>}
                 </>
@@ -166,10 +211,14 @@ export default function CardFlow() {
             <div>
                 <button onClick={prevCard} disabled={activeFlow === "main" && currentIndex === 0}>Back</button>
                 <button
-                    onClick={nextCard}
+                    onClick={//nextCard
+                        currentCard.type === "picture" ? submitUserProfile : nextCard
+                    }
                     disabled={activeFlow === "main" && currentIndex === mainCardFlow.length - 1 && !userProfile.branchChoice}
                 >
-                    {activeFlow === "main" ? "Next" : "Continue"}
+                    {//activeFlow === "main" ? "Next" : "Continue"
+                        currentCard.type === "picture" ? "Submit" : "Next"
+                    }
                 </button>
                 {renderUserObject()}
             </div>

@@ -1,11 +1,13 @@
 import { registerUser } from "../api/authApi"
 import "./registerForm.css"
+import { useNavigate } from "react-router"
 
 interface RegisterFormProps {
   onError: (errorMessage: string) => void
 }
 
 export default function RegisterForm({ onError }: RegisterFormProps) {
+    const navigate = useNavigate();
 
     async function register(formData: FormData): Promise<void> {
         const email = formData.get("email")
@@ -18,6 +20,7 @@ export default function RegisterForm({ onError }: RegisterFormProps) {
 
         try {
           const result = await registerUser({email, password})
+          navigate("/profile")
           console.log("Registered:", result)
 
         } catch (error) {

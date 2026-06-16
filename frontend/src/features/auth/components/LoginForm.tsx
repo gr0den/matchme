@@ -1,11 +1,13 @@
 import { loginUser } from "../api/authApi"
 import "./loginForm.css"
+import { useNavigate } from "react-router"
 
 interface LoginFormProps {
   onError: (errorMessage: string) => void
 }
 
 export default function LoginForm({ onError }: LoginFormProps) {
+  const navigate = useNavigate();
 
   async function logIn(formData: FormData): Promise<void> {
 
@@ -21,6 +23,7 @@ export default function LoginForm({ onError }: LoginFormProps) {
     try {
       const result = await loginUser({email, password})
       console.log("Logged in:", result);
+      navigate("/profile")
 
     } catch (error) {
       const message = error instanceof Error ? error.message : "Login failed"

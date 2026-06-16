@@ -1,10 +1,8 @@
 package com.me.controllers;
 
 import com.me.dto.requests.auth.LoginRequest;
-import com.me.dto.requests.auth.LogoutRequest;
 import com.me.dto.requests.auth.RegistrationRequest;
 import com.me.dto.response.auth.LoginResponse;
-import com.me.dto.response.auth.LogoutResponse;
 import com.me.dto.response.auth.RegistrationResponse;
 import com.me.services.AuthService;
 import com.me.services.JwtService;
@@ -31,12 +29,14 @@ public class AuthController
     public ResponseEntity<RegistrationResponse> register(@Valid @RequestBody RegistrationRequest request)
     {
         RegistrationResponse registrationResponse = authService.register(request);
-        
+
         ResponseCookie jwtCookie = jwtService.generateJwtCookie(registrationResponse.getToken());
 
         registrationResponse.setToken(null);
 
-        return ResponseEntity.status(HttpStatus.CREATED).header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(registrationResponse);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                             .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                             .body(registrationResponse);
     }
 
     @PostMapping("/login")
@@ -51,12 +51,5 @@ public class AuthController
         return ResponseEntity.ok()
                              .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                              .body(loginResponse);
-    }
-
-    @PostMapping("/logout")
-    public ResponseEntity<LogoutResponse> logout(@Valid @RequestBody LogoutRequest request)
-    {
-        return ResponseEntity.ok()
-                             .body(authService.logout(request));
     }
 }
