@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import type { ChangeEvent } from "react";
-import { fetchGenres, fetchInterests, uploadProfileImage } from "../api/profileApi";
-import type { ButtonData, UserProfile } from "../types/cardTypes";
+import { fetchGenres, fetchInterests, uploadProfileImage, createProfile } from "../api/profileApi";
+import type { ButtonData, UserProfile, UserProfileCreation } from "../types/cardTypes";
+import { useFieldErrors } from "../errorHandling/useFieldErrors";
+
+
 
 export function useUserProfile() {
     const [userProfile, setUserProfile] = useState<UserProfile>({})
@@ -13,6 +16,8 @@ export function useUserProfile() {
     const [isUploadingImage, setIsUploadingImage] = useState(false)
     const [imageError, setImageError] = useState<string | null>(null)
     const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+
+    const { fieldErrors, validateCard, clearFieldError, clearAllErrors } = useFieldErrors()
 
     useEffect(() => {
         let isMounted = true
@@ -137,6 +142,63 @@ export function useUserProfile() {
         }
     }
 
+    async function submitUserProfile() {
+        const finalProfile = buildUserProfileCreation(userProfile)
+
+        if (!finalProfile) {
+            return
+        }
+
+        const result = await createProfile(finalProfile)
+        return result
+    }
+
+    type CompleteUserProfileBase = UserProfile & {
+        userName: string;
+        bio: string;
+        interests: number[];
+        genres: number[];
+        latitude: number;
+        longitude: number;
+        searchRadius: number;
+    }
+
+    function hasCompleteBaseProfile(profile: UserProfile): profile is CompleteUserProfileBase {
+        return (
+            typeof profile.userName === "string" &&
+            typeof profile.bio === "string" &&
+            Array.isArray(profile.interests) &&
+            Array.isArray(profile.genres) &&
+            typeof profile.latitude === "number" &&
+            typeof profile.longitude === "number" &&
+            typeof profile.searchRadius === "number"
+        )
+    }
+
+    function buildUserProfileCreation(profile: UserProfile): UserProfileCreation | null {
+        if (!hasCompleteBaseProfile(profile)) {
+            return null
+        }
+
+        const targetGenres = profile.branchChoice === "same" ? profile.genres : profile.targetGenres
+
+        if (!Array.isArray(targetGenres)) {
+            return null
+        }
+
+        return {
+            userName: profile.userName,
+            bio: profile.bio,
+            interests: profile.interests,
+            genres: profile.genres,
+            targetGenres,
+            latitude: profile.latitude,
+            longitude: profile.longitude,
+            searchRadius: profile.searchRadius,
+            ...(typeof profile.pictureUrl === "string" ? { pictureUrl: profile.pictureUrl } : {}),
+        }
+    }
+
     return {
         userProfile,
         setUserProfile,
@@ -148,6 +210,10 @@ export function useUserProfile() {
         isUploadingImage,
         imageError,
         previewUrl,
+        fieldErrors,
+        validateCard,
+        clearFieldError,
+        clearAllErrors,
         handleChange,
         toggleButtonNames,
         handleBranchChoice,
@@ -155,5 +221,6 @@ export function useUserProfile() {
         getSearchRadius,
         handleImageChange,
         handleImageUpload,
+        submitUserProfile,
     }
 }

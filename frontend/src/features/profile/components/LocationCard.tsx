@@ -1,6 +1,6 @@
 import type { LocationCardProps } from "../types/cardTypes"
 
-export default function LocationCard({ onClick, onChange }: LocationCardProps) {
+export default function LocationCard({ onClick, onChange, error }: LocationCardProps) {
     return (
         <div className="location-card">
             <h2>Where are you located?</h2>
@@ -22,6 +22,12 @@ export default function LocationCard({ onClick, onChange }: LocationCardProps) {
                 />
                 <label htmlFor="radius">Search Radius 1 - 20 000km</label>
             </div>
+
+            {error && (
+                <div style={{ color: "red", marginTop: "0.5rem", fontSize: "0.875rem" }}>
+                    {error}
+                </div>
+            )}
         </div>
     )
 }
