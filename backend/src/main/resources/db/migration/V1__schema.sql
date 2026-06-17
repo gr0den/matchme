@@ -59,6 +59,7 @@ CREATE TABLE user_target_genres
 
 CREATE TABLE user_connections
 (
+    id BIGSERIAL PRIMARY KEY,
     user_id       BIGINT      NOT NULL,
     connection_id BIGINT      NOT NULL,
     status        VARCHAR(10) NOT NULL

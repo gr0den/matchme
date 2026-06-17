@@ -1,6 +1,7 @@
 import { registerUser } from "../api/authApi"
 import "./registerForm.css"
 import { useNavigate } from "react-router"
+import { useAuth } from "../../../shared/context/AuthContext"
 
 interface RegisterFormProps {
   onError: (errorMessage: string) => void
@@ -8,6 +9,7 @@ interface RegisterFormProps {
 
 export default function RegisterForm({ onError }: RegisterFormProps) {
     const navigate = useNavigate();
+    const { setCurrentUserId } = useAuth();
 
     async function register(formData: FormData): Promise<void> {
         const email = formData.get("email")
@@ -20,11 +22,13 @@ export default function RegisterForm({ onError }: RegisterFormProps) {
 
         try {
           const result = await registerUser({email, password})
-          navigate("/profile")
           console.log("Registered:", result)
 
+          setCurrentUserId(result.id)
+
+          navigate("/profile")
+
         } catch (error) {
-          // typecheck to ensure that caught error was an instance of Error otherwise use: "Registration failed" 
           const message = error instanceof Error ? error.message : "Registration failed"
           onError(message)
         }

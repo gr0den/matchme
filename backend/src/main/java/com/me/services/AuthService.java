@@ -11,7 +11,6 @@ import com.me.exceptions.UserNotFoundException;
 import com.me.mappers.AuthMapper;
 import com.me.repositories.AuthRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,8 +22,7 @@ public class AuthService
     private final AuthRepository authRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
-    private final StringRedisTemplate redis;
-
+    
     @Transactional
     public RegistrationResponse register(RegistrationRequest request)
     {
