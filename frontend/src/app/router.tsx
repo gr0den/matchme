@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 
 import LoginRegisterPage from "../features/auth/pages/LoginRegisterPage";
 import ProfilePage from "../features/profile/pages/ProfilePage";
+import RecommendationsPage from "../features/recommendations/pages/RecommendationsPage";
 
 export const router = createBrowserRouter([
     {
@@ -12,8 +13,8 @@ export const router = createBrowserRouter([
         path: "/profile",
         element: <ProfilePage />,
     },
-    /*{
-        path: "/register",
-        element: <RegisterPage />,
-    }, */
+    {
+        path: "/recommendations",
+        element: <RecommendationsPage />,
+    }, 
 ]);
