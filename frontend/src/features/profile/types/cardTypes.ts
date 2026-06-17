@@ -140,7 +140,7 @@ export type LocationCardProps = {
 
 export type PictureCardProps = {
     onChange: (event: ChangeEvent<HTMLInputElement>) => void;
-    onUpload: () => Promise<void> | void;
+    onUpload: () => Promise<unknown> | void;
     previewUrl?: string;
     isUploading?: boolean;
     error?: string | null;

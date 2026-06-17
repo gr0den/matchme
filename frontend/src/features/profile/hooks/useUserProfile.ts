@@ -135,6 +135,8 @@ export function useUserProfile() {
                 ...prev,
                 pictureUrl: uploadedUrl,
             }))
+
+            return uploadedUrl
         } catch (error) {
             setImageError(error instanceof Error ? error.message : "Image upload failed.")
         } finally {

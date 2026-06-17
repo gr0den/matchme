@@ -156,3 +156,22 @@ export async function createProfile(profile: UserProfileCreation): Promise<{user
     const createResult = await response.json();
     return createResult as {userId: number, message: string};
 }
+
+export async function updateProfile(
+    profile: UserProfileCreation): Promise<{ userId: number; message: string }> {
+    const response = await fetch(`${BASE_URL}/user/profile/update`, {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(profile),
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error?.message || "Failed to update profile.");
+    }
+
+    return response.json() as Promise<{ userId: number; message: string }>;
+}
