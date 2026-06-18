@@ -18,6 +18,12 @@ export default defineConfig(
                 target: 'http://matchme-backend:8080',
                 changeOrigin: true,
             },
+            '/ws':
+            {
+                target: 'http://matchme-backend:8080',
+                ws: true, // CRITICAL: Instructs Vite to pass the WebSocket protocol upgrade
+                changeOrigin: true,
+            },
         },
 
         watch:
