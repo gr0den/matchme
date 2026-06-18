@@ -10,6 +10,7 @@ import LocationCard from "../components/LocationCard";
 import PictureCard from "../components/PictureCard";
 import type { CardConfig } from "../types/cardTypes";
 import { useUserProfile } from "../hooks/useUserProfile";
+import "../styles/CardFlowPage.css"
 
 export default function CardFlow() {
     const [currentIndex, setCurrentIndex] = useState(0)
@@ -152,7 +153,7 @@ export default function CardFlow() {
                         error={fieldErrors[card.id]}
                     />
                     {isLoadingTags && <p>Loading options...</p>}
-                    {tagsError && <p role="alert">{tagsError}</p>}
+                    {tagsError && <p className="profile-error" role="alert">{tagsError}</p>}
                 </>
             )
         }
@@ -186,7 +187,7 @@ export default function CardFlow() {
                         isUploading={isUploadingImage}
                         error={fieldErrors[card.id]}
                     />
-                    {imageError && <p role="alert">{imageError}</p>}
+                    {imageError && <p className="profile-error" role="alert">{imageError}</p>}
                 </>
             )
         }
@@ -196,19 +197,19 @@ export default function CardFlow() {
 
     function renderUserObject() {
         return (
-            <pre style={{ marginTop: "1rem", whiteSpace: "pre-wrap" }}>
+            <pre className="profile-debug">
                 {JSON.stringify(userProfile, null, 2)}
             </pre>
         )
     }
 
     return (
-        <div>
-            <div>
+        <div className="card-flow-page">
+            <div className="card-flow-card">
                 {currentCard && renderCard(currentCard)}
             </div>
 
-            <div>
+            <div className="card-flow-actions">
                 <button onClick={prevCard} disabled={activeFlow === "main" && currentIndex === 0}>Back</button>
                 <button
                     onClick={//nextCard

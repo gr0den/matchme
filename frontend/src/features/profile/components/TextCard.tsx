@@ -1,4 +1,5 @@
 import type { TextCardProps } from "../types/cardTypes"
+import "../styles/TextCard.css"
 
 export default function TextCard({ config, value, onChange, error }: TextCardProps) {
     return (
@@ -19,11 +20,10 @@ export default function TextCard({ config, value, onChange, error }: TextCardPro
             )}
 
             {error && (
-                <div style={{ color: "red", marginTop: "0.5rem", fontSize: "0.875rem" }}>
+                <div className="profile-error">
                     {error}
                 </div>
             )}
         </div>
     )
 }
-

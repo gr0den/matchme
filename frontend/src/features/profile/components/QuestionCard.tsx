@@ -1,10 +1,11 @@
 import type { QuestionCardProps } from "../types/cardTypes"
+import "../styles/QuestionCard.css"
 
 export default function QuestionCard({ config, selectedOption, onSelect, error }: QuestionCardProps) {
     return (
         <div className="question-card">
             <h2>{config.title}</h2>
-            <div>
+            <div className="question-options">
                 {config.options.map((option) => (
                     <button
                         key={option.id}
@@ -18,7 +19,7 @@ export default function QuestionCard({ config, selectedOption, onSelect, error }
             </div>
 
             {error && (
-                <div style={{ color: "red", marginTop: "0.5rem", fontSize: "0.875rem" }}>
+                <div className="profile-error">
                     {error}
                 </div>
             )}
