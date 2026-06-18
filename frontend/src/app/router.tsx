@@ -5,11 +5,12 @@ import { useNotificationsWebSocket } from "../shared/hooks/useNotificationsWebSo
 
 import { useAuth } from "../shared/context/AuthContext";
 
-const RootLayout = () => 
+const RootLayout = () =>
 {
-    const { currentUserId } = useAuth(); 
+    const { currentUserId } = useAuth();
 
     useNotificationsWebSocket(currentUserId);
+import RecommendationsPage from "../features/recommendations/pages/RecommendationsPage";
 
     return (
         <>
@@ -29,7 +30,11 @@ export const router: any = createBrowserRouter([
             {
                 path: "/profile",
                 element: <ProfilePage />,
-            }
+            },
+            {
+                path: "/recommendations",
+                element: <RecommendationsPage />,
+            },
         ]
     }
 ]);
