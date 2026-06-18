@@ -1,4 +1,5 @@
 import type { ButtonCardProps } from "../types/cardTypes"
+import "../styles/ButtonCard.css"
 
 export default function ButtonCard({ title, names, selectedNames, onToggle, error }: ButtonCardProps) {
     return (
@@ -17,7 +18,7 @@ export default function ButtonCard({ title, names, selectedNames, onToggle, erro
             </div>
 
             {error && (
-                <div style={{ color: "red", marginTop: "0.5rem", fontSize: "0.875rem" }}>
+                <div className="profile-error">
                     {error}
                 </div>
             )}
