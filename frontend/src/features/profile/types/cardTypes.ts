@@ -110,6 +110,10 @@ export const differentPreferenceCardFlow: CardConfig[] = [
 
 //---------------- Card props -------------------------------------------------------------------------------------------
 
+export type CardFlowProps = {
+    onSubmitSuccess: () => void
+}
+
 export type TextCardProps = {
     config: TextCardConfig;
     value: string;
