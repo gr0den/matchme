@@ -1,0 +1,56 @@
+.location-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    width: min(100%, 420px);
+    padding: 24px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 8px 24px rgba(31, 31, 31, 0.1);
+}
+
+.location-card h2 {
+    margin: 0;
+    text-align: center;
+    font-size: 1.35rem;
+}
+
+.location-actions,
+.location-radius {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.location-card button {
+    min-height: 40px;
+    padding: 10px 16px;
+    border: 1px solid #222222;
+    border-radius: 8px;
+    background-color: #222222;
+    color: #ffffff;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.location-card input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d6d6d2;
+    border-radius: 8px;
+    font: inherit;
+}
+
+.location-card label {
+    color: #555555;
+    font-size: 0.875rem;
+}
+
+.profile-error {
+    margin: 8px 0 0;
+    color: #c0392b;
+    font-size: 0.875rem;
+}

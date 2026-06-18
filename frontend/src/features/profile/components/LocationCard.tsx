@@ -1,10 +1,11 @@
 import type { LocationCardProps } from "../types/cardTypes"
+import "../styles/LocationCard.css"
 
 export default function LocationCard({ onClick, onChange, error }: LocationCardProps) {
     return (
         <div className="location-card">
             <h2>Where are you located?</h2>
-            <div>
+            <div className="location-actions">
                 <button
                     onClick={() => onClick()}
                 >
@@ -12,7 +13,7 @@ export default function LocationCard({ onClick, onChange, error }: LocationCardP
                 </button>
             </div>
 
-            <div>
+            <div className="location-radius">
                 <input 
                     type="text"
                     id="radius"
@@ -24,7 +25,7 @@ export default function LocationCard({ onClick, onChange, error }: LocationCardP
             </div>
 
             {error && (
-                <div style={{ color: "red", marginTop: "0.5rem", fontSize: "0.875rem" }}>
+                <div className="profile-error">
                     {error}
                 </div>
             )}

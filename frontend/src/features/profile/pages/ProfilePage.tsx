@@ -3,6 +3,7 @@ import CardFlow from "./CardFlowPage"
 import UpdateProfilePage from "./UpdateProfilePage"
 import { getOnboarded } from '../api/profileApi'
 import NavBar from '../../../shared/components/ui/navbar/navbar'
+import "../styles/ProfilePage.css"
 
 export default function ProfilePage() {
     const [view, setView] = useState<'cardFlow' | 'updateProfile'>('cardFlow')
@@ -37,22 +38,38 @@ export default function ProfilePage() {
     }, []);
 
     if (isLoading) {
-    return <p>Loading...</p>
+        return <p className="profile-status">Loading...</p>
     }
 
     if (error) {
-        return <p>{error}</p>
+        return <p className="profile-status profile-error">{error}</p>
     }
 
     return (
         <>
             <NavBar />
 
-            <button onClick={() => setView('cardFlow')}>Card Flow</button>
-            <button onClick={() => setView('updateProfile')}>Update Page</button>
-            
-            {view === 'cardFlow' && <CardFlow />}
-            {view === 'updateProfile' && <UpdateProfilePage />}
+            <main className="profile-page">
+                <div className="profile-view-toggle">
+                    <button
+                        type="button"
+                        className={view === 'cardFlow' ? "active" : ""}
+                        onClick={() => setView('cardFlow')}
+                    >
+                        Card Flow
+                    </button>
+                    <button
+                        type="button"
+                        className={view === 'updateProfile' ? "active" : ""}
+                        onClick={() => setView('updateProfile')}
+                    >
+                        Update Page
+                    </button>
+                </div>
+
+                {view === 'cardFlow' && <CardFlow />}
+                {view === 'updateProfile' && <UpdateProfilePage />}
+            </main>
         </>
     )
 }

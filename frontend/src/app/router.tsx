@@ -1,9 +1,9 @@
 import {createBrowserRouter, Outlet} from "react-router-dom";
 import LoginRegisterPage from "../features/auth/pages/LoginRegisterPage";
 import ProfilePage from "../features/profile/pages/ProfilePage";
-import {useNotificationsWebSocket} from "../shared/hooks/useNotificationsWebSocket";
+import { useNotificationsWebSocket } from "../shared/hooks/useNotificationsWebSocket";
 import RecommendationsPage from "../features/recommendations/pages/RecommendationsPage";
-import {useAuth} from "../shared/context/AuthContext";
+import { useAuth } from "../shared/context/AuthContext";
 
 const RootLayout = () =>
 {
