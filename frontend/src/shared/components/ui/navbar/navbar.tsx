@@ -1,11 +1,82 @@
+import { useLocation, useNavigate } from "react-router-dom"
 import { logout } from "../../../../features/auth/api/authApi"
+import navClickSound from "../../../assets/nav-click.mp3"
+import "./navbar.css"
 
 export default function NavBar() {
+    const navigate = useNavigate()
+    const location = useLocation()
+
+    function playPlaceholderSound() {
+        const audio = new Audio(navClickSound)
+        audio.play().catch((error) => {
+            console.error("Failed to play navigation sound.", error)
+        })
+    }
+
+    async function handleLogout() {
+        try {
+            await logout()
+            navigate("/")
+        } catch (error) {
+            console.error("Failed to log out.", error)
+        }
+    }
+
+    function getNavButtonClass(path: string) {
+        return location.pathname === path ? "navbar-button active" : "navbar-button"
+    }
+
     return (
-        <nav>
-            <ul>
+        <nav className="navbar" aria-label="Main navigation">
+            <ul className="navbar-list navbar-list-left">
                 <li>
-                    <button onClick={logout}>Log out</button>
+                    <button
+                        type="button"
+                        className={getNavButtonClass("/profile")}
+                        onClick={() => navigate("/profile")}
+                    >
+                        Profile
+                    </button>
+                </li>
+                <li>
+                    <button
+                        type="button"
+                        className={getNavButtonClass("/recommendations")}
+                        onClick={() => navigate("/recommendations")}
+                    >
+                        Match
+                    </button>
+                </li>
+                <li>
+                    <button
+                        type="button"
+                        className="navbar-button"
+                        onClick={playPlaceholderSound}
+                    >
+                        Connections
+                    </button>
+                </li>
+                <li>
+                    <button
+                        type="button"
+                        className="navbar-button"
+                        onClick={playPlaceholderSound}
+                    >
+                        Chat
+                    </button>
+                </li>
+            </ul>
+
+            <ul className="navbar-list navbar-list-right">
+                <li>
+                    <button
+                        type="button"
+                        className="navbar-button navbar-logout-button"
+                        onClick={handleLogout}
+                    >
+                        Log Out
+                    </button>
                 </li>
             </ul>
         </nav>

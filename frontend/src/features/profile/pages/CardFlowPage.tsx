@@ -217,9 +217,7 @@ export default function CardFlow() {
                     }
                     disabled={activeFlow === "main" && currentIndex === mainCardFlow.length - 1 && !userProfile.branchChoice}
                 >
-                    {//activeFlow === "main" ? "Next" : "Continue"
-                        currentCard.type === "picture" ? "Submit" : "Next"
-                    }
+                    {currentCard.type === "picture" ? "Submit" : "Next"}
                 </button>
                 {renderUserObject()}
             </div>

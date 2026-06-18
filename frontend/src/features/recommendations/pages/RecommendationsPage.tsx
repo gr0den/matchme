@@ -74,19 +74,36 @@ export default function RecommendationsPage() {
     }
 
     if (isLoadingIds) {
-        return <p>Loading recommendations...</p>;
+        return (
+        <>
+            <NavBar />
+            <p>Loading recommendations...</p>
+        </>
+        )
     }
 
     if (error) {
-        return <p>{error}</p>;
+        return (
+        <>
+            <NavBar />
+            <p>{error}</p>
+        </>)
     }
 
     if (recommendationIds.length === 0) {
-        return <p>No recommendations found.</p>;
+        return (
+        <>
+            <NavBar />
+            <p>No recommendations found.</p>
+        </>)
     }
 
     if (currentIndex >= recommendationIds.length) {
-        return <p>No more recommendations.</p>;
+        return (
+        <>
+            <NavBar />
+            <p>No more recommendations.</p>
+        </>)
     }
 
     return (
