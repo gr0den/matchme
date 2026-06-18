@@ -64,7 +64,17 @@ public class Profile
             )
     private Set<Genre> targetGenres;
 
+    @ManyToMany
+    @JoinTable
+            (
+                    name = "user_connections",
+                    joinColumns = @JoinColumn(name = "user_id"),
+                    inverseJoinColumns = @JoinColumn(name = "connection_id")
+            )
+    private Set<Connection> connections;
+
     @Column(name = "search_radius")
     private Integer searchRadius;
 
+    
 }
