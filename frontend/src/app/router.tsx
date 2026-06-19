@@ -1,28 +1,18 @@
-import {createBrowserRouter, Outlet} from "react-router-dom";
+import {createBrowserRouter} from "react-router-dom";
 import LoginRegisterPage from "../features/auth/pages/LoginRegisterPage";
 import ProfilePage from "../features/profile/pages/ProfilePage";
-import { useNotificationsWebSocket } from "../shared/hooks/useNotificationsWebSocket";
 import RecommendationsPage from "../features/recommendations/pages/RecommendationsPage";
-import { useAuth } from "../shared/context/AuthContext";
+import ConnectionsPage from "../features/connections/pages/ConnectionsPage";
+import RootLayout from "./RootLayout";
 
-const RootLayout = () =>
-{
-    const {currentUserId} = useAuth();
-
-    useNotificationsWebSocket(currentUserId);
-
-
-    return (<>
-        <Outlet/>
-    </>);
-};
-
-export const router: any = createBrowserRouter([{
+export const router = createBrowserRouter([{
     element: <RootLayout/>, children: [{
         path: "/", element: <LoginRegisterPage/>,
     }, {
         path: "/profile", element: <ProfilePage/>,
     }, {
         path: "/recommendations", element: <RecommendationsPage/>,
+    }, {
+        path: "/connections", element: <ConnectionsPage/>,
     },]
 }]);
