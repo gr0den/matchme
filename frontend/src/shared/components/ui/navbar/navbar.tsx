@@ -1,18 +1,10 @@
 import { useLocation, useNavigate } from "react-router-dom"
 import { logout } from "../../../../features/auth/api/authApi"
-import navClickSound from "../../../assets/nav-click.mp3"
 import "./navbar.css"
 
 export default function NavBar() {
     const navigate = useNavigate()
     const location = useLocation()
-
-    function playPlaceholderSound() {
-        const audio = new Audio(navClickSound)
-        audio.play().catch((error) => {
-            console.error("Failed to play navigation sound.", error)
-        })
-    }
 
     async function handleLogout() {
         try {
@@ -51,8 +43,8 @@ export default function NavBar() {
                 <li>
                     <button
                         type="button"
-                        className="navbar-button"
-                        onClick={playPlaceholderSound}
+                        className={getNavButtonClass("/connections")}
+                        onClick={() => navigate("/connections")}
                     >
                         Connections
                     </button>
@@ -61,7 +53,6 @@ export default function NavBar() {
                     <button
                         type="button"
                         className="navbar-button"
-                        onClick={playPlaceholderSound}
                     >
                         Chat
                     </button>
