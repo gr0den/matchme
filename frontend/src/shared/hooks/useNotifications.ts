@@ -1,5 +1,5 @@
-import {useEffect, useRef} from 'react';
-import {Client, type IFrame, type IMessage} from '@stomp/stompjs';
+import { useEffect } from "react";
+import { Client, type IMessage } from "@stomp/stompjs";
 
 export type MatchMeNotification = {
     type: string;
@@ -9,56 +9,28 @@ export type MatchMeNotification = {
 
 export const useNotificationsWebSocket = (
     currentUserId: number | null,
+    stompClient: Client | null,
+    isStompConnected: boolean,
     onNotification?: (notification: MatchMeNotification) => void,
 ) =>
 {
-    const stompClientRef = useRef<Client | null>(null);
-
     useEffect(() =>
     {
-        if (!currentUserId) return;
+        if (!currentUserId || !stompClient || !isStompConnected) return;
 
-        const client = new Client({
-            brokerURL: 'ws://localhost:3000/ws', reconnectDelay: 5000,
-
-            onConnect: () =>
-            {
-                console.log('WebSocket connection is established for user ID:', currentUserId);
-
-                const subscriptionPath = `/topic/notifications/${currentUserId}`;
-
-                client.subscribe(subscriptionPath, (message: IMessage) =>
-                {
-                    const notificationData = JSON.parse(message.body) as MatchMeNotification;
-                    console.log('Incoming MatchMe Notification:', notificationData);
-                    onNotification?.(notificationData);
-                });
-            },
-
-            onWebSocketError: (error: Event) =>
-            {
-                console.error('Network Error: WebSocket failed.', error);
-            },
-
-            onStompError: (frame: IFrame) =>
-            {
-                console.error('Broker Error: ', frame.headers['message']);
-            }
+        const subscriptionPath = `/topic/notifications/${currentUserId}`;
+        const subscription = stompClient.subscribe(subscriptionPath, (message: IMessage) =>
+        {
+            const notificationData = JSON.parse(message.body) as MatchMeNotification;
+            onNotification?.(notificationData);
         });
-
-        client.activate();
-        stompClientRef.current = client;
 
         return () =>
         {
-            if (client.active)
-            {
-                client.deactivate();
-            }
-            stompClientRef.current = null;
+            subscription.unsubscribe();
         };
 
-    }, [currentUserId, onNotification]);
+    }, [currentUserId, stompClient, isStompConnected, onNotification]);
 
     return;
 };

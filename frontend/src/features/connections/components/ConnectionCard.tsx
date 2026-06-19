@@ -9,6 +9,7 @@ export default function ConnectionCard({
     onToggleAbout,
     onAccept,
     onReject,
+    onChat,
     onDisconnect,
 }: ConnectionCardProps) {
     const isBusy = busyAction !== null
@@ -68,7 +69,8 @@ export default function ConnectionCard({
                         <button
                             className="connection-primary-button"
                             type="button"
-                            disabled
+                            onClick={onChat}
+                            disabled={isBusy}
                         >
                             Chat
                         </button>

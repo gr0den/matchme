@@ -36,4 +36,7 @@ public class ChatMessage
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime timestamp;
+
+    @Column(name = "read_at")
+    private LocalDateTime readAt;
 }

@@ -1,5 +1,7 @@
-import { useState, useEffect } from 'react';
-import { Client, type IMessage } from '@stomp/stompjs';
+/* eslint-disable react-hooks/set-state-in-effect */
+import { useCallback, useEffect, useState } from "react";
+import { Client, type IMessage } from "@stomp/stompjs";
+import { getChatHistory, sendChatMessage } from "../../features/chat/api/chatApi";
 
 export interface ChatMessage {
     id: number;
@@ -7,78 +9,150 @@ export interface ChatMessage {
     receiverId: number;
     content: string;
     timestamp: string;
+    readAt: string | null;
 }
 
 interface UseChatReturn {
     messages: ChatMessage[];
+    isLoading: boolean;
+    isLoadingMore: boolean;
+    isSending: boolean;
+    hasMore: boolean;
+    error: string | null;
     sendMessage: (content: string) => Promise<void>;
+    loadEarlierMessages: () => Promise<void>;
 }
 
 export const useChat = (
-    currentUserId: number | null, 
-    contactId: number | null, 
-    stompClient: Client | null
+    currentUserId: number | null,
+    contactId: number | null,
+    stompClient: Client | null,
+    isStompConnected: boolean,
+    onIncomingMessage?: (message: ChatMessage) => void,
+    onMessageSent?: (message: ChatMessage) => void,
 ): UseChatReturn => {
-    
     const [messages, setMessages] = useState<ChatMessage[]>([]);
+    const [page, setPage] = useState(0);
+    const [hasMore, setHasMore] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
+    const [isSending, setIsSending] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    function mergeMessages(previous: ChatMessage[], nextMessages: ChatMessage[], append: boolean) {
+        const knownIds = new Set(previous.map((message) => message.id));
+        const uniqueMessages = nextMessages.filter((message) => !knownIds.has(message.id));
+
+        return append ? [...previous, ...uniqueMessages] : [...uniqueMessages, ...previous];
+    }
 
     useEffect(() => {
-        if (!contactId) return;
+        if (!contactId) {
+            setMessages([]);
+            setPage(0);
+            setHasMore(false);
+            setError(null);
+            return;
+        }
 
-        const fetchHistory = async () => {
+        const activeContactId = contactId;
+        let shouldIgnore = false;
+
+        async function fetchHistory() {
             try {
-                const response = await fetch(`/api/chat/${contactId}`);
-                if (response.ok) {
-                    const history: ChatMessage[] = await response.json();
-                    setMessages(history);
+                setIsLoading(true);
+                setError(null);
+
+                const history = await getChatHistory(activeContactId);
+
+                if (!shouldIgnore) {
+                    setMessages(history.messages);
+                    setPage(history.page);
+                    setHasMore(history.hasMore);
                 }
-            } catch (error) {
-                console.error("Failed to load chat history:", error);
+            } catch (err) {
+                if (!shouldIgnore) {
+                    setError(err instanceof Error ? err.message : "Failed to load chat history.");
+                    setMessages([]);
+                    setHasMore(false);
+                }
+            } finally {
+                if (!shouldIgnore) {
+                    setIsLoading(false);
+                }
             }
-        };
+        }
 
         fetchHistory();
+
+        return () => {
+            shouldIgnore = true;
+        };
     }, [contactId]);
 
-  
     useEffect(() => {
-        if (!stompClient || !stompClient.connected || !currentUserId || !contactId) return;
+        if (!stompClient || !isStompConnected || !currentUserId) return;
 
         const subscription = stompClient.subscribe(`/topic/chat/${currentUserId}`, (frame: IMessage) => {
-            const incomingMessage: ChatMessage = JSON.parse(frame.body);
+            const incomingMessage = JSON.parse(frame.body) as ChatMessage;
 
-         
             if (incomingMessage.senderId === contactId) {
-                setMessages((prev) => [...prev, incomingMessage]);
-            } else {
-                console.log(`Unread message from User ${incomingMessage.senderId}`);
+                setMessages((previous) => mergeMessages(previous, [incomingMessage], true));
             }
+
+            onIncomingMessage?.(incomingMessage);
         });
 
         return () => {
             subscription.unsubscribe();
         };
-    }, [stompClient, currentUserId, contactId]);
+    }, [stompClient, isStompConnected, currentUserId, contactId, onIncomingMessage]);
 
-    const sendMessage = async (content: string) => {
+    const loadEarlierMessages = useCallback(async () => {
+        if (!contactId || !hasMore || isLoadingMore) return;
+
+        try {
+            setIsLoadingMore(true);
+            setError(null);
+
+            const nextPage = page + 1;
+            const history = await getChatHistory(contactId, nextPage);
+
+            setMessages((previous) => mergeMessages(previous, history.messages, false));
+            setPage(history.page);
+            setHasMore(history.hasMore);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Failed to load earlier messages.");
+        } finally {
+            setIsLoadingMore(false);
+        }
+    }, [contactId, hasMore, isLoadingMore, page]);
+
+    const sendMessage = useCallback(async (content: string) => {
         if (!content.trim() || !contactId) return;
 
         try {
-            const response = await fetch(`/api/chat/${contactId}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-  
-                body: JSON.stringify({ content }) 
-            });
+            setIsSending(true);
+            setError(null);
 
-            if (response.ok) {
-                const savedMessage: ChatMessage = await response.json();
-                setMessages((prev) => [...prev, savedMessage]);
-            }
-        } catch (error) {
-            console.error("Failed to send message:", error);
+            const savedMessage = await sendChatMessage(contactId, content);
+            setMessages((previous) => mergeMessages(previous, [savedMessage], true));
+            onMessageSent?.(savedMessage);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Failed to send message.");
+        } finally {
+            setIsSending(false);
         }
-    };
+    }, [contactId, onMessageSent]);
 
-    return { messages, sendMessage };
+    return {
+        messages,
+        isLoading,
+        isLoadingMore,
+        isSending,
+        hasMore,
+        error,
+        sendMessage,
+        loadEarlierMessages,
+    };
 };

@@ -14,4 +14,5 @@ public class ChatMessageResponse
     private Long receiverId;
     private String content;
     private LocalDateTime timestamp;
+    private LocalDateTime readAt;
 }

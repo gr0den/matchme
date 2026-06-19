@@ -27,5 +27,6 @@ export type ConnectionCardProps = {
     onToggleAbout: () => void;
     onAccept?: () => void;
     onReject?: () => void;
+    onChat?: () => void;
     onDisconnect?: () => void;
 }

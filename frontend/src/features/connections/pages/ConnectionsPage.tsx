@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react"
-import { useOutletContext } from "react-router-dom"
+import { useNavigate, useOutletContext } from "react-router-dom"
 import NavBar from "../../../shared/components/ui/navbar/navbar"
 import { useAuth } from "../../../shared/context/AuthContext"
 import type { RootOutletContext } from "../../../app/RootLayout"
@@ -16,6 +16,7 @@ import type { ConnectedUser, ConnectionAction } from "../types/connectionTypes"
 
 export default function ConnectionsPage() {
     const { currentUserId } = useAuth()
+    const navigate = useNavigate()
     const { connectionNotificationVersion } = useOutletContext<RootOutletContext>()
     const [pendingUsers, setPendingUsers] = useState<ConnectedUser[]>([])
     const [activeUsers, setActiveUsers] = useState<ConnectedUser[]>([])
@@ -179,6 +180,7 @@ export default function ConnectionsPage() {
                                                 busyAction={busyUserActions[user.id] ?? null}
                                                 isAboutOpen={openAboutIds.includes(user.id)}
                                                 onToggleAbout={() => toggleAbout(user.id)}
+                                                onChat={() => navigate(`/chat?contactId=${user.id}`)}
                                                 onDisconnect={() => handleDisconnect(user)}
                                             />
                                         ))}
