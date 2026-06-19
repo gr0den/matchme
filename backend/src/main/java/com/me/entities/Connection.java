@@ -8,11 +8,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @Entity
 @Table(name = "user_connections")
 @Getter
 @Setter
+@Accessors(chain = true)
 public class Connection
 {
     @Id
