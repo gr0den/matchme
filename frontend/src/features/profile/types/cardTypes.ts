@@ -110,6 +110,10 @@ export const differentPreferenceCardFlow: CardConfig[] = [
 
 //---------------- Card props -------------------------------------------------------------------------------------------
 
+export type CardFlowProps = {
+    onSubmitSuccess: () => void
+}
+
 export type TextCardProps = {
     config: TextCardConfig;
     value: string;
@@ -135,6 +139,8 @@ export type QuestionCardProps = {
 export type LocationCardProps = {
     onClick: () => void;
     onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+    isGettingLocation?: boolean;
+    locationMessage?: { type: "success" | "error"; text: string } | null;
     error?: string | null;
 }
 

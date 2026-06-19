@@ -68,11 +68,6 @@
     font-weight: 500;
 }
 
-.profile-coordinates {
-    display: grid;
-    gap: 6px;
-}
-
 .pictureUrl {
     align-items: flex-start;
 }
@@ -107,6 +102,20 @@
 .update-profile-form button:disabled {
     cursor: not-allowed;
     opacity: 0.55;
+}
+
+.profile-location-message {
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.profile-location-message.success {
+    color: #207a45;
+}
+
+.profile-location-message.error {
+    color: #c0392b;
 }
 
 .profile-debug {

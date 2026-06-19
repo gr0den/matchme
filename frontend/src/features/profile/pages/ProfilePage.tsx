@@ -67,7 +67,8 @@ export default function ProfilePage() {
                     </button>
                 </div>
 
-                {view === 'cardFlow' && <CardFlow />}
+                {view === 'cardFlow' && (
+                    <CardFlow onSubmitSuccess={() => setView("updateProfile")} />)}
                 {view === 'updateProfile' && <UpdateProfilePage />}
             </main>
         </>

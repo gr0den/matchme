@@ -8,11 +8,11 @@ import ButtonCard from "../components/ButtonCard";
 import QuestionCard from "../components/QuestionCard";
 import LocationCard from "../components/LocationCard";
 import PictureCard from "../components/PictureCard";
-import type { CardConfig } from "../types/cardTypes";
+import type { CardConfig, CardFlowProps } from "../types/cardTypes";
 import { useUserProfile } from "../hooks/useUserProfile";
 import "../styles/CardFlowPage.css"
 
-export default function CardFlow() {
+export default function CardFlow({ onSubmitSuccess }: CardFlowProps) {
     const [currentIndex, setCurrentIndex] = useState(0)
     const [activeFlow, setActiveFlow] = useState<"main" | "same" | "different">("main")
     const {
@@ -21,6 +21,8 @@ export default function CardFlow() {
         genresOptions,
         isLoadingTags,
         tagsError,
+        isGettingLocation,
+        locationMessage,
         fieldErrors,
         validateCard,
         clearFieldError,
@@ -119,6 +121,15 @@ export default function CardFlow() {
         }
     }
 
+    async function handleSubmit() {
+        try {
+            await submitUserProfile()
+            onSubmitSuccess()
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
     function renderCard(card: CardConfig) {
         if (card.type === "text" || card.type === "textarea") {
             return (
@@ -173,6 +184,8 @@ export default function CardFlow() {
             return <LocationCard 
                 onClick={handleGetUserCoordsWithErrorClear}
                 onChange={handleGetSearchRadiusWithErrorClear}
+                isGettingLocation={isGettingLocation}
+                locationMessage={locationMessage}
                 error={fieldErrors[card.id]}
             />
         }
@@ -213,7 +226,7 @@ export default function CardFlow() {
                 <button onClick={prevCard} disabled={activeFlow === "main" && currentIndex === 0}>Back</button>
                 <button
                     onClick={//nextCard
-                        currentCard.type === "picture" ? submitUserProfile : nextCard
+                        currentCard.type === "picture" ? handleSubmit : nextCard
                     }
                     disabled={activeFlow === "main" && currentIndex === mainCardFlow.length - 1 && !userProfile.branchChoice}
                 >
