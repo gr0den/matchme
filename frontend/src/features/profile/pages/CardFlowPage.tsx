@@ -21,6 +21,8 @@ export default function CardFlow({ onSubmitSuccess }: CardFlowProps) {
         genresOptions,
         isLoadingTags,
         tagsError,
+        isGettingLocation,
+        locationMessage,
         fieldErrors,
         validateCard,
         clearFieldError,
@@ -182,6 +184,8 @@ export default function CardFlow({ onSubmitSuccess }: CardFlowProps) {
             return <LocationCard 
                 onClick={handleGetUserCoordsWithErrorClear}
                 onChange={handleGetSearchRadiusWithErrorClear}
+                isGettingLocation={isGettingLocation}
+                locationMessage={locationMessage}
                 error={fieldErrors[card.id]}
             />
         }

@@ -139,6 +139,8 @@ export type QuestionCardProps = {
 export type LocationCardProps = {
     onClick: () => void;
     onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+    isGettingLocation?: boolean;
+    locationMessage?: { type: "success" | "error"; text: string } | null;
     error?: string | null;
 }
 

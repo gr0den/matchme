@@ -12,6 +12,8 @@ export function useUserProfile() {
     const [genresOptions, setGenresOptions] = useState<ButtonData[]>([])
     const [isLoadingTags, setIsLoadingTags] = useState(true)
     const [tagsError, setTagsError] = useState<string | null>(null)
+    const [isGettingLocation, setIsGettingLocation] = useState(false)
+    const [locationMessage, setLocationMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
     const [imageFile, setImageFile] = useState<File | null>(null)
     const [isUploadingImage, setIsUploadingImage] = useState(false)
     const [imageError, setImageError] = useState<string | null>(null)
@@ -86,20 +88,40 @@ export function useUserProfile() {
     }
 
     function getUserCoords() {
+        setLocationMessage(null)
+
         if (!navigator.geolocation) {
-            console.error("Geolocation is not supported.");
-        } else {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    setUserProfile(prev => ({
-                        ...prev,
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude,
-                    }))
-                },
-                (error) => {console.error(`Unable to get user location with error code: ${error.code}`)}
-            )
+            setLocationMessage({
+                type: "error",
+                text: "Geolocation is not supported by your browser.",
+            })
+            return
         }
+
+        setIsGettingLocation(true)
+
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                setUserProfile(prev => ({
+                    ...prev,
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                }))
+                setLocationMessage({
+                    type: "success",
+                    text: "Location found.",
+                })
+                setIsGettingLocation(false)
+            },
+            (error) => {
+                console.error(`Unable to get user location with error code: ${error.code}`)
+                setLocationMessage({
+                    type: "error",
+                    text: "Unable to get your location. Please allow location access and try again.",
+                })
+                setIsGettingLocation(false)
+            }
+        )
     }
 
     function getSearchRadius(event: ChangeEvent<HTMLInputElement>) {
@@ -208,6 +230,8 @@ export function useUserProfile() {
         genresOptions,
         isLoadingTags,
         tagsError,
+        isGettingLocation,
+        locationMessage,
         imageFile,
         isUploadingImage,
         imageError,

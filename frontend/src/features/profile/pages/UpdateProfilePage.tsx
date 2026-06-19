@@ -29,6 +29,8 @@ export default function UpdateProfilePage() {
     const [formData, setFormData] = useState<EditProfileForm | null>(null)
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [isGettingLocation, setIsGettingLocation] = useState(false)
+    const [locationMessage, setLocationMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
 
     useEffect(() => {
         async function loadProfile() {
@@ -182,25 +184,44 @@ export default function UpdateProfilePage() {
     }
 
     function getNewUserCoords() {
-        clearFieldError("location");
+        clearFieldError("location")
+        setLocationMessage(null)
 
         if (!navigator.geolocation) {
-            console.error("Geolocation is not supported.");
-        } else {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    setFormData(prev => prev
-                        ? {
-                            ...prev,
-                            latitude: position.coords.latitude,
-                            longitude: position.coords.longitude,
-                          }
-                        : prev
-                    )
-                },
-                (error) => {console.error(`Unable to get user location with error code: ${error.code}`)}
-            )
+            setLocationMessage({
+                type: "error",
+                text: "Geolocation is not supported by your browser.",
+            })
+            return
         }
+
+        setIsGettingLocation(true)
+
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                setFormData(prev => prev
+                    ? {
+                        ...prev,
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                      }
+                    : prev
+                )
+                setLocationMessage({
+                    type: "success",
+                    text: "Location updated.",
+                })
+                setIsGettingLocation(false)
+            },
+            (error) => {
+                console.error(`Unable to get user location with error code: ${error.code}`)
+                setLocationMessage({
+                    type: "error",
+                    text: "Unable to get your location. Please allow location access and try again.",
+                })
+                setIsGettingLocation(false)
+            }
+        )
     }
 
     async function handleNewImageUpload() {
@@ -293,11 +314,21 @@ export default function UpdateProfilePage() {
                 </div>
 
                 <div className="profile-field location">
-                    <div className="profile-coordinates">
-                        <p>Latitude: {formData.latitude}</p>
-                        <p>Longitude: {formData.longitude}</p>
-                    </div>
-                    <button type="button" onClick={getNewUserCoords}>Use current location</button>
+                    <button
+                        type="button"
+                        onClick={getNewUserCoords}
+                        disabled={isGettingLocation}
+                    >
+                        {isGettingLocation ? "Loading..." : "Update current location"}
+                    </button>
+                    {locationMessage && (
+                        <p
+                            className={`profile-location-message ${locationMessage.type}`}
+                            role={locationMessage.type === "error" ? "alert" : "status"}
+                        >
+                            {locationMessage.text}
+                        </p>
+                    )}
                     {fieldErrors.location && <p className="profile-error" role="alert">{fieldErrors.location}</p>}
                 </div>
 
