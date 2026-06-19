@@ -1,4 +1,5 @@
 import type { ConnectionCardProps } from "../types/connectionTypes"
+import defaultAvatar from "../../../shared/assets/default-avatar.png"
 
 export default function ConnectionCard({
     user,
@@ -14,18 +15,11 @@ export default function ConnectionCard({
     return (
         <article className="connection-row">
             <div className="connection-person">
-                {user.pictureUrl ? (
-                    <img
-                        className="connection-avatar"
-                        src={user.pictureUrl}
-                        alt={`${user.userName}'s profile`}
-                    />
-                ) : (
-                    <div
-                        className="connection-avatar connection-avatar-placeholder"
-                        aria-hidden="true"
-                    />
-                )}
+                <img
+                    className="connection-avatar"
+                    src={user.pictureUrl || defaultAvatar}
+                    alt={`${user.userName}'s profile`}
+                />
 
                 <div className="connection-copy">
                     <h2>{user.userName}</h2>
