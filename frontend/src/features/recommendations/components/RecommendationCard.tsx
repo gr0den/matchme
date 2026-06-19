@@ -1,42 +1,68 @@
 import type { RecommendationCardProps } from "../types/recommendationTypes";
 
-export default function RecommendationCard({ user, onAccept, onReject }: RecommendationCardProps) {
+export default function RecommendationCard({
+    user,
+    busyAction,
+    isAboutOpen,
+    onToggleAbout,
+    onConnect,
+    onDismiss,
+}: RecommendationCardProps) {
+    const isBusy = busyAction !== null
+
     return (
-        <article>
-            {user.pictureUrl && (
-                <img src="{user.pictureUrl} alt={`${user.userName}'s profile`}"/>
-            )}
+        <article className="recommendation-row">
+            <div className="recommendation-person">
+                {user.pictureUrl ? (
+                    <img
+                        className="recommendation-avatar"
+                        src={user.pictureUrl}
+                        alt={`${user.userName}'s profile`}
+                    />
+                ) : (
+                    <div
+                        className="recommendation-avatar recommendation-avatar-placeholder"
+                        aria-hidden="true"
+                    />
+                )}
 
-            <h2>{user.userName}</h2>
+                <div className="recommendation-copy">
+                    <h2>{user.userName}</h2>
 
-            <section>
-                <h3>Interests</h3>
-                {user.interests.map((interest) => (
-                    <span key={interest.id}>{interest.interest}</span>
-                ))}
-            </section>
+                    <button
+                        className="recommendation-about-button"
+                        type="button"
+                        onClick={onToggleAbout}
+                        aria-expanded={isAboutOpen}
+                    >
+                        About
+                    </button>
 
-            <section>
-                <h3>Genres</h3>
-                {user.genres.map((genre) => (
-                    <span key={genre.id}>{genre.genre}</span>
-                ))}
-            </section>
+                    {isAboutOpen && (
+                        <p className="recommendation-about">
+                            {user.bio || "No bio yet."}
+                        </p>
+                    )}
+                </div>
+            </div>
 
-            <section>
-                <h3>Looking for</h3>
-                {user.targetGenres.map((genre) => (
-                    <span key={genre.id}>{genre.genre}</span>
-                ))}
-            </section>
-
-            <div>
-                <button type="button" onClick={onReject}>
-                    Reject
+            <div className="recommendation-actions">
+                <button
+                    className="recommendation-connect-button"
+                    type="button"
+                    onClick={onConnect}
+                    disabled={isBusy}
+                >
+                    {busyAction === "connect" ? "Sending..." : "Connect"}
                 </button>
 
-                <button type="button" onClick={onAccept}>
-                    Accept
+                <button
+                    className="recommendation-dismiss-button"
+                    type="button"
+                    onClick={onDismiss}
+                    disabled={isBusy}
+                >
+                    {busyAction === "dismiss" ? "Dismissing..." : "Dismiss"}
                 </button>
             </div>
         </article>

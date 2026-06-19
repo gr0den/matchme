@@ -1,19 +1,22 @@
-import type { Genre, Interest} from "../../profile/types/cardTypes"
-
 export type RecommendedUser = {
     id: number;
     userName: string;
     pictureUrl: string;
-    longitude: number;
-    latitude: number;
-    interests: Interest[];
-    genres: Genre[];
-    targetGenres: Genre[];
-    searchRadius: number;
+    bio: string;
 }
 
 export type RecommendationCardProps = {
     user: RecommendedUser;
-    onAccept: () => void;
-    onReject: () => void;
+    busyAction: RecommendationAction | null;
+    isAboutOpen: boolean;
+    onToggleAbout: () => void;
+    onConnect: () => void;
+    onDismiss: () => void;
 }
+
+export type ConnectionRequest = {
+    requesterId: number;
+    targetUserId: number;
+}
+
+export type RecommendationAction = "connect" | "dismiss"
