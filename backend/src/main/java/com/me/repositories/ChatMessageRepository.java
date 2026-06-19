@@ -11,8 +11,8 @@ import com.me.entities.ChatMessage;
 public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long>
 {
     @Query("SELECT m FROM ChatMessage m WHERE " +
-           "(m.senderId = :userOne AND m.recipientId = :userTwo) OR " +
-           "(m.senderId = :userTwo AND m.recipientId = :userOne) " +
+           "(m.senderId = :userOne AND m.receiverId = :userTwo) OR " +
+           "(m.senderId = :userTwo AND m.receiverId = :userOne) " +
            "ORDER BY m.timestamp ASC")
     List<ChatMessage> findChatHistory(@Param("userOne") Long userOne, @Param("userTwo") Long userTwo);
 }
