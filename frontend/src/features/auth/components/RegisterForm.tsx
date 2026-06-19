@@ -24,7 +24,7 @@ export default function RegisterForm({ onError }: RegisterFormProps) {
           const result = await registerUser({email, password})
           console.log("Registered:", result)
 
-          setCurrentUserId(result.id)
+          setCurrentUserId(result.id) 
 
           navigate("/profile")
 
