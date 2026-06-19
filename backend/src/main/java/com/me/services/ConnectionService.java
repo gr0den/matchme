@@ -103,4 +103,14 @@ public class ConnectionService
                 .setPendingConnections(pending)
                 .setActiveConnections(active);
     }
+
+    public void disconnectUser(Long currentUserId, Long contactId) 
+    {
+        Connection existingConnection = connectionRepository.findMutualConnection(currentUserId, contactId)
+            .orElseThrow(() -> new RuntimeException("Active connection not found"));
+
+        existingConnection.setStatus("DISMISSED"); 
+        
+        connectionRepository.save(existingConnection);
+    }
 }

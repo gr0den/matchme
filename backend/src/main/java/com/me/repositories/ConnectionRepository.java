@@ -22,4 +22,9 @@ public interface ConnectionRepository extends JpaRepository<Connection, Long>
     @Query("SELECT CASE WHEN c.userId = :userId THEN c.connectionId ELSE c.userId END " +
            "FROM Connection c WHERE (c.userId = :userId OR c.connectionId = :userId) AND c.status = 'CONNECTED'")
     List<Long> findActiveConnections(@Param("userId") Long userId);
+
+    @Query("SELECT c FROM Connection c WHERE " +
+           "(c.userId = :userOne AND c.connectionId = :userTwo) OR " +
+           "(c.userId = :userTwo AND c.connectionId = :userOne)")
+    Optional<Connection> findMutualConnection(@Param("userOne") Long userOne, @Param("userTwo") Long userTwo);
 }
