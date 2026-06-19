@@ -63,4 +63,13 @@ CREATE TABLE user_connections
     user_id       BIGINT      NOT NULL,
     connection_id BIGINT      NOT NULL,
     status        VARCHAR(10) NOT NULL
-)
+);
+
+CREATE TABLE chat_messages
+(
+    id BIGSERIAL PRIMARY KEY,
+    sender_id   BIGINT NOT NULL,
+    receiver_id BIGINT NOT NULL,
+    content     TEXT   NOT NULL,
+    timestamp   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+);
