@@ -6,6 +6,7 @@ import type { RootOutletContext } from "../../../app/RootLayout"
 import ConnectionCard from "../components/ConnectionCard"
 import {
     acceptConnectionRequest,
+    disconnectUser,
     getConnectedUser,
     getConnections,
     rejectConnectionRequest,
@@ -104,6 +105,25 @@ export default function ConnectionsPage() {
         }
     }
 
+    async function handleDisconnect(targetUser: ConnectedUser) {
+        setBusyUserActions((actions) => ({ ...actions, [targetUser.id]: "disconnect" }))
+        setError(null)
+
+        try {
+            await disconnectUser(targetUser.id)
+            setActiveUsers((users) => users.filter((user) => user.id !== targetUser.id))
+            setOpenAboutIds((ids) => ids.filter((id) => id !== targetUser.id))
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Failed to disconnect user.")
+        } finally {
+            setBusyUserActions((actions) => {
+                const nextActions = { ...actions }
+                delete nextActions[targetUser.id]
+                return nextActions
+            })
+        }
+    }
+
     return (
         <>
             <NavBar />
@@ -156,9 +176,10 @@ export default function ConnectionsPage() {
                                                 key={user.id}
                                                 user={user}
                                                 mode="connection"
-                                                busyAction={null}
+                                                busyAction={busyUserActions[user.id] ?? null}
                                                 isAboutOpen={openAboutIds.includes(user.id)}
                                                 onToggleAbout={() => toggleAbout(user.id)}
+                                                onDisconnect={() => handleDisconnect(user)}
                                             />
                                         ))}
                                     </div>

@@ -9,6 +9,7 @@ export default function ConnectionCard({
     onToggleAbout,
     onAccept,
     onReject,
+    onDisconnect,
 }: ConnectionCardProps) {
     const isBusy = busyAction !== null
 
@@ -75,9 +76,10 @@ export default function ConnectionCard({
                         <button
                             className="connection-secondary-button"
                             type="button"
-                            disabled
+                            onClick={onDisconnect}
+                            disabled={isBusy}
                         >
-                            Disconnect
+                            {busyAction === "disconnect" ? "Disconnecting..." : "Disconnect"}
                         </button>
                     </>
                 )}
