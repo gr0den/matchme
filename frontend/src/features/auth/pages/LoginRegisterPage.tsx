@@ -30,11 +30,13 @@ export default function LoginRegisterPage() {
                 <div className="toggleButtons">
                         <button 
                         className={`loginBtn ${displayLogReg ? "active" : ""}`}
+                        aria-pressed={displayLogReg}
                         onClick={displayLogin}>Login
                         </button>
 
                         <button 
                         className={`regBtn ${displayLogReg ? "" : "active"}`} 
+                        aria-pressed={!displayLogReg}
                         onClick={displayRegister}>Register
                         </button>
                 </div>
