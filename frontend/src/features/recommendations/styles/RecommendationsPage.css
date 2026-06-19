@@ -1,0 +1,164 @@
+.recommendations-page {
+    width: 100%;
+    min-height: calc(100vh - 69px);
+    padding: 40px 16px;
+    background-color: #faf7f1;
+}
+
+.recommendations-panel {
+    width: min(100%, 1100px);
+    margin: 0 auto;
+}
+
+.recommendations-panel h1 {
+    margin: 0 0 18px;
+    color: #5f5f5f;
+    font-size: 1.75rem;
+    line-height: 1.2;
+}
+
+.recommendations-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 26px 28px;
+    border: 10px solid #f1f3f4;
+    border-radius: 8px;
+    background-color: #ffffff;
+}
+
+.recommendation-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 20px;
+    align-items: start;
+    min-height: 92px;
+}
+
+.recommendation-person {
+    display: flex;
+    gap: 20px;
+    min-width: 0;
+}
+
+.recommendation-avatar {
+    flex: 0 0 auto;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: #eeeeee;
+}
+
+.recommendation-avatar-placeholder {
+    border: 1px solid #e3e3e3;
+}
+
+.recommendation-copy {
+    min-width: 0;
+}
+
+.recommendation-copy h2 {
+    margin: 8px 0 6px;
+    color: #5f5f5f;
+    font-size: 1.25rem;
+    line-height: 1.2;
+}
+
+.recommendation-about-button {
+    min-height: 32px;
+    padding: 0;
+    border: 0;
+    border-bottom: 2px solid #cfcfcf;
+    border-radius: 0;
+    background-color: transparent;
+    color: #696969;
+    font: inherit;
+    font-size: 1.05rem;
+    cursor: pointer;
+}
+
+.recommendation-about-button:hover {
+    color: #222222;
+    border-bottom-color: #222222;
+}
+
+.recommendation-about-button:focus-visible,
+.recommendation-actions button:focus-visible {
+    outline: 3px solid rgba(83, 111, 76, 0.28);
+    outline-offset: 2px;
+}
+
+.recommendation-about {
+    max-width: 680px;
+    margin: 12px 0 0;
+    color: #444444;
+    line-height: 1.5;
+}
+
+.recommendation-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    min-width: 118px;
+    padding-top: 10px;
+}
+
+.recommendation-actions button {
+    min-height: 36px;
+    padding: 6px 18px;
+    border: 0;
+    border-radius: 8px;
+    color: #5f5f5f;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.recommendation-actions button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.recommendation-connect-button {
+    background-color: #ffd58f;
+}
+
+.recommendation-dismiss-button {
+    background-color: #d6d6d6;
+}
+
+.recommendations-status,
+.recommendations-error {
+    width: min(100%, 680px);
+    margin: 24px auto;
+    text-align: center;
+}
+
+.recommendations-error {
+    color: #c0392b;
+}
+
+@media (max-width: 700px) {
+    .recommendations-page {
+        padding: 28px 12px;
+    }
+
+    .recommendations-list {
+        padding: 18px;
+    }
+
+    .recommendation-row {
+        grid-template-columns: 1fr;
+    }
+
+    .recommendation-actions {
+        flex-direction: row;
+        padding-top: 0;
+    }
+
+    .recommendation-actions button {
+        flex: 1;
+    }
+}

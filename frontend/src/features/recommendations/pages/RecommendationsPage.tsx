@@ -1,125 +1,135 @@
 import { useEffect, useState } from "react"
 import NavBar from "../../../shared/components/ui/navbar/navbar"
+import { useAuth } from "../../../shared/context/AuthContext"
 import RecommendationCard from "../components/RecommendationCard"
-import { getRecommendations, getRecommendedUser } from "../api/recommendationsApi"
-import type { RecommendedUser } from "../types/recommendationTypes"
+import {
+    connectToRecommendedUser,
+    dismissRecommendedUser,
+    getRecommendations,
+    getRecommendedUser,
+} from "../api/recommendationsApi"
+import "../styles/RecommendationsPage.css"
+import type { RecommendedUser, RecommendationAction } from "../types/recommendationTypes"
 
 export default function RecommendationsPage() {
-    const [recommendationIds, setRecommendationIds] = useState<number[]>([])
-    const [currentIndex, setCurrentIndex] = useState(0)
-    const [currentUser, setCurrentUser] = useState<RecommendedUser | null>(null)
-    const [isLoadingIds, setIsLoadingIds] = useState(true)
-    const [isLoadingUser, setIsLoadingUser] = useState(false)
+    const { currentUserId } = useAuth()
+    const [recommendedUsers, setRecommendedUsers] = useState<RecommendedUser[]>([])
+    const [openAboutIds, setOpenAboutIds] = useState<number[]>([])
+    const [busyUserActions, setBusyUserActions] = useState<Record<number, RecommendationAction>>({})
+    const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
 
-    // load a list of IDs
     useEffect(() => {
         async function loadRecommendations() {
             try {
-                setIsLoadingIds(true)
+                setIsLoading(true)
                 setError(null)
 
                 const ids = await getRecommendations()
+                const users = await Promise.all(ids.map((id) => getRecommendedUser(id)))
 
-                setRecommendationIds(ids)
-                setCurrentIndex(0)
+                setRecommendedUsers(users)
+                setOpenAboutIds([])
             } catch (err) {
                 setError(err instanceof Error ? err.message : "Failed to load recommendations.")
             } finally {
-                setIsLoadingIds(false)
+                setIsLoading(false)
             }
         }
 
         loadRecommendations()
     }, [])
 
-    // loads the current user
-    useEffect(() => {
-        const currentId = recommendationIds[currentIndex]
+    function toggleAbout(userId: number) {
+        setOpenAboutIds((ids) => {
+            if (ids.includes(userId)) {
+                return ids.filter((id) => id !== userId)
+            }
 
-        if (!currentId) {
-            setCurrentUser(null)
+            return [...ids, userId]
+        })
+    }
+
+    async function handleRecommendationAction(
+        targetUserId: number,
+        action: RecommendationAction,
+    ) {
+        if (!currentUserId) {
+            setError("You need to be logged in to use recommendations.")
             return
         }
 
-        let isMounted = true
+        setBusyUserActions((actions) => ({ ...actions, [targetUserId]: action }))
+        setError(null)
 
-        async function loadCurrentUser() {
-            try {
-                setIsLoadingUser(true)
-                setError(null)
-
-                const user = await getRecommendedUser(currentId)
-
-                if (isMounted) {
-                    setCurrentUser(user)
-                }
-            } catch (err) {
-                if (isMounted) {
-                    setError(err instanceof Error ? err.message : "Failed to load recommended user.")
-                }
-            } finally {
-                if (isMounted) {
-                    setIsLoadingUser(false)
-                }
+        try {
+            const request = {
+                requesterId: currentUserId,
+                targetUserId,
             }
+
+            if (action === "connect") {
+                await connectToRecommendedUser(request)
+            } else {
+                await dismissRecommendedUser(request)
+            }
+
+            setRecommendedUsers((users) => users.filter((user) => user.id !== targetUserId))
+            setOpenAboutIds((ids) => ids.filter((id) => id !== targetUserId))
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Failed to update recommendation.")
+        } finally {
+            setBusyUserActions((actions) => {
+                const nextActions = { ...actions }
+                delete nextActions[targetUserId]
+                return nextActions
+            })
         }
-
-        loadCurrentUser()
-        return () => {isMounted = false}
-    }, [recommendationIds, currentIndex])
-
-    function goToNextRecommendation() {
-        setCurrentIndex((index) => index + 1);
     }
 
-    if (isLoadingIds) {
+    if (isLoading) {
         return (
-        <>
-            <NavBar />
-            <p>Loading recommendations...</p>
-        </>
+            <>
+                <NavBar />
+                <main className="recommendations-page">
+                    <p className="recommendations-status">Loading recommendations...</p>
+                </main>
+            </>
         )
-    }
-
-    if (error) {
-        return (
-        <>
-            <NavBar />
-            <p>{error}</p>
-        </>)
-    }
-
-    if (recommendationIds.length === 0) {
-        return (
-        <>
-            <NavBar />
-            <p>No recommendations found.</p>
-        </>)
-    }
-
-    if (currentIndex >= recommendationIds.length) {
-        return (
-        <>
-            <NavBar />
-            <p>No more recommendations.</p>
-        </>)
     }
 
     return (
         <>
             <NavBar />
+            <main className="recommendations-page">
+                <section className="recommendations-panel" aria-labelledby="recommendations-title">
+                    <h1 id="recommendations-title">Top Recommendations</h1>
 
-            {isLoadingUser && <p>Loading user...</p>}
+                    {error && (
+                        <p className="recommendations-error" role="alert">
+                            {error}
+                        </p>
+                    )}
 
-            {currentUser && !isLoadingUser && (
-                <RecommendationCard
-                    user={currentUser}
-                    onAccept={goToNextRecommendation}
-                    onReject={goToNextRecommendation}
-                />
-            )}
+                    {recommendedUsers.length === 0 ? (
+                        <p className="recommendations-status">No recommendations found.</p>
+                    ) : (
+                        <div className="recommendations-list">
+                            {recommendedUsers.map((user) => (
+                                <RecommendationCard
+                                    key={user.id}
+                                    user={user}
+                                    busyAction={busyUserActions[user.id] ?? null}
+                                    isAboutOpen={openAboutIds.includes(user.id)}
+                                    onToggleAbout={() => toggleAbout(user.id)}
+                                    onConnect={() => handleRecommendationAction(user.id, "connect")}
+                                    onDismiss={() => handleRecommendationAction(user.id, "dismiss")}
+                                />
+                            ))}
+                        </div>
+                    )}
+                </section>
+            </main>
         </>
     )
-
 }
