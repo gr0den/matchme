@@ -23,10 +23,8 @@ public class ChatService
     private final ConnectionRepository connectionRepository;
     private final SimpMessagingTemplate messagingTemplate;
 
-    public ChatMessageResponse sendMessage(ChatMessageRequest request) 
+    public ChatMessageResponse sendMessage(Long senderId, Long receiverId, ChatMessageRequest request) 
     {
-        Long senderId = request.getSenderId();
-        Long receiverId = request.getReceiverId();
         String content = request.getContent();
 
     

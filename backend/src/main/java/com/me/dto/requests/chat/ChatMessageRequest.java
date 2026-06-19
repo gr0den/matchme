@@ -1,7 +1,6 @@
 package com.me.dto.requests.chat;
 
-import java.time.LocalDateTime;
-
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -9,9 +8,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class ChatMessageRequest 
 {
-    private Long id;
-    private Long senderId;
-    private Long receiverId;
+    @NotBlank(message = "Message content cannot be empty")
     private String content;
-    private LocalDateTime timestamp;
 }

@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.me.dto.requests.chat.ChatMessageRequest;
 import com.me.dto.response.chat.ChatMessageResponse;
 import com.me.services.ChatService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -34,11 +36,10 @@ public class ChatController
     @PostMapping("/{contactId}")
     public ResponseEntity<ChatMessageResponse> sendMessage(@AuthenticationPrincipal Long currentUserId,
                                                            @PathVariable Long contactId,
-                                                           @RequestBody Map<String, String> payload) 
+                                                           @Valid @RequestBody ChatMessageRequest request) 
     {
-        String content = payload.get("content");
-        ChatMessageResponse sentMessage = chatService.sendMessage(currentUserId, contactId, content);
+        // Pass the IDs and the DTO to the service
+        ChatMessageResponse sentMessage = chatService.sendMessage(currentUserId, contactId, request);
         
         return ResponseEntity.ok(sentMessage);
     }
-}

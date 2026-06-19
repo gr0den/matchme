@@ -1,8 +1,8 @@
 import { useCallback, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { useAuth } from "../shared/context/AuthContext";
-import { useNotificationsWebSocket } from "../shared/hooks/useNotificationsWebSocket";
-import type { MatchMeNotification } from "../shared/hooks/useNotificationsWebSocket";
+import { useNotificationsWebSocket } from "../shared/hooks/useNotifications";
+import type { MatchMeNotification } from "../shared/hooks/useNotifications";
 
 export type RootOutletContext = {
     connectionNotificationVersion: number;

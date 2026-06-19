@@ -71,5 +71,5 @@ CREATE TABLE chat_messages
     sender_id   BIGINT NOT NULL,
     receiver_id BIGINT NOT NULL,
     content     TEXT   NOT NULL,
-    timestamp   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    timestamp   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
