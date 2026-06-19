@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import type { EditProfileForm, Interest, Genre, ButtonData, UserProfileCreation } from "../types/cardTypes"
 import { useFieldErrors } from "../errorHandling/useFieldErrors";
 import { getMe, getBio, getProfile, updateProfile as updateProfileApi } from "../api/profileApi";
+import defaultAvatar from "../../../shared/assets/default-avatar.png"
 import "../styles/UpdateProfilePage.css"
 
 export default function UpdateProfilePage() {
@@ -348,9 +349,11 @@ export default function UpdateProfilePage() {
                     {imageError && (
                         <p className="profile-error">{imageError}</p>
                     )}
-                    {(previewUrl ?? formData.pictureUrl) && (
-                        <img className="profile-preview-image" src={previewUrl ?? formData.pictureUrl} alt="Profile preview" />
-                    )}
+                    <img
+                        className="profile-preview-image"
+                        src={(previewUrl ?? formData.pictureUrl) || defaultAvatar}
+                        alt="Profile preview"
+                    />
                 </div>
 
                 <div className="profile-field searchRadius">

@@ -53,7 +53,7 @@ export default function LoginForm({ onError }: LoginFormProps) {
               <input id="password" type="password" name="password"></input>
             </div>
 
-            <button>Log in</button>
+            <button type="submit">Log in</button>
         </form>
     )
 }

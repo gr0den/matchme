@@ -2,7 +2,7 @@
     width: 100%;
     min-height: calc(100vh - 69px);
     padding: 40px 16px;
-    background-color: #faf7f1;
+    background-color: var(--main-bg-color);
 }
 
 .recommendations-panel {
@@ -11,20 +11,21 @@
 }
 
 .recommendations-panel h1 {
-    margin: 0 0 18px;
-    color: #5f5f5f;
-    font-size: 1.75rem;
+    margin: 0 0 24px;
+    color: #222222;
+    font-size: 1.8rem;
     line-height: 1.2;
 }
 
 .recommendations-list {
     display: flex;
     flex-direction: column;
-    gap: 18px;
-    padding: 26px 28px;
-    border: 10px solid #f1f3f4;
+    gap: 14px;
+    padding: 18px;
+    border: 1px solid #e7e5df;
     border-radius: 8px;
     background-color: #ffffff;
+    box-shadow: 0 2px 8px rgba(20, 20, 20, 0.05);
 }
 
 .recommendation-row {
@@ -32,19 +33,31 @@
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 20px;
     align-items: start;
-    min-height: 92px;
+    min-height: 88px;
+    padding: 12px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    transition:
+        background-color 160ms ease,
+        border-color 160ms ease,
+        box-shadow 160ms ease;
+}
+
+.recommendation-row:hover {
+    background-color: #f4f1ed;
+    border-color: #ded8cf;
 }
 
 .recommendation-person {
     display: flex;
-    gap: 20px;
+    gap: 18px;
     min-width: 0;
 }
 
 .recommendation-avatar {
     flex: 0 0 auto;
-    width: 72px;
-    height: 72px;
+    width: 68px;
+    height: 68px;
     border-radius: 50%;
     object-fit: cover;
     background-color: #eeeeee;
@@ -59,9 +72,9 @@
 }
 
 .recommendation-copy h2 {
-    margin: 8px 0 6px;
-    color: #5f5f5f;
-    font-size: 1.25rem;
+    margin: 6px 0 6px;
+    color: #222222;
+    font-size: 1.15rem;
     line-height: 1.2;
 }
 
@@ -69,18 +82,21 @@
     min-height: 32px;
     padding: 0;
     border: 0;
-    border-bottom: 2px solid #cfcfcf;
+    border-bottom: 2px solid #ded8cf;
     border-radius: 0;
     background-color: transparent;
-    color: #696969;
+    color: #2f4a2b;
     font: inherit;
-    font-size: 1.05rem;
+    font-weight: 600;
     cursor: pointer;
+    transition:
+        border-color 160ms ease,
+        color 160ms ease;
 }
 
 .recommendation-about-button:hover {
+    border-bottom-color: #b9cdb1;
     color: #222222;
-    border-bottom-color: #222222;
 }
 
 .recommendation-about-button:focus-visible,
@@ -98,22 +114,32 @@
 
 .recommendation-actions {
     display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 6px;
-    min-width: 118px;
-    padding-top: 10px;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    min-width: 220px;
+    padding-top: 12px;
 }
 
 .recommendation-actions button {
-    min-height: 36px;
-    padding: 6px 18px;
-    border: 0;
+    min-height: 38px;
+    padding: 6px 16px;
+    border: 1px solid transparent;
     border-radius: 8px;
-    color: #5f5f5f;
+    color: #222222;
     font: inherit;
     font-weight: 600;
     cursor: pointer;
+    transition:
+        background-color 160ms ease,
+        border-color 160ms ease,
+        color 160ms ease,
+        box-shadow 160ms ease;
+}
+
+.recommendation-actions button:hover:not(:disabled) {
+    background-color: #f4f1ed;
+    border-color: #ded8cf;
 }
 
 .recommendation-actions button:disabled {
@@ -122,31 +148,36 @@
 }
 
 .recommendation-connect-button {
-    background-color: #ffd58f;
+    background-color: #e8f0e4;
+    border-color: #b9cdb1;
+    color: #2f4a2b;
 }
 
 .recommendation-dismiss-button {
-    background-color: #d6d6d6;
+    background-color: #ffffff;
+    border-color: #e7e5df;
 }
 
 .recommendations-status,
 .recommendations-error {
-    width: min(100%, 680px);
-    margin: 24px auto;
-    text-align: center;
+    margin: 0;
+    padding: 18px;
+    border: 1px solid #e7e5df;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: #444444;
 }
 
 .recommendations-error {
-    color: #c0392b;
+    margin-bottom: 18px;
+    border-color: #f0c7c2;
+    background-color: #fef2f1;
+    color: #8f2f27;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 760px) {
     .recommendations-page {
         padding: 28px 12px;
-    }
-
-    .recommendations-list {
-        padding: 18px;
     }
 
     .recommendation-row {
@@ -154,7 +185,8 @@
     }
 
     .recommendation-actions {
-        flex-direction: row;
+        width: 100%;
+        min-width: 0;
         padding-top: 0;
     }
 

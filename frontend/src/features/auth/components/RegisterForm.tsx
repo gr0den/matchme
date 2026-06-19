@@ -46,7 +46,7 @@ export default function RegisterForm({ onError }: RegisterFormProps) {
               <input id="password" type="password" name="password"></input>
             </div>
 
-            <button>Register</button>
+            <button type="submit">Register</button>
         </form>
     )
 }

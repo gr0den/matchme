@@ -1,4 +1,5 @@
 import type { RecommendationCardProps } from "../types/recommendationTypes";
+import defaultAvatar from "../../../shared/assets/default-avatar.png"
 
 export default function RecommendationCard({
     user,
@@ -13,18 +14,11 @@ export default function RecommendationCard({
     return (
         <article className="recommendation-row">
             <div className="recommendation-person">
-                {user.pictureUrl ? (
-                    <img
-                        className="recommendation-avatar"
-                        src={user.pictureUrl}
-                        alt={`${user.userName}'s profile`}
-                    />
-                ) : (
-                    <div
-                        className="recommendation-avatar recommendation-avatar-placeholder"
-                        aria-hidden="true"
-                    />
-                )}
+                <img
+                    className="recommendation-avatar"
+                    src={user.pictureUrl || defaultAvatar}
+                    alt={`${user.userName}'s profile`}
+                />
 
                 <div className="recommendation-copy">
                     <h2>{user.userName}</h2>
