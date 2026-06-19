@@ -38,7 +38,6 @@ public class ChatController
                                                            @PathVariable Long contactId,
                                                            @Valid @RequestBody ChatMessageRequest request) 
     {
-        // Pass the IDs and the DTO to the service
         ChatMessageResponse sentMessage = chatService.sendMessage(currentUserId, contactId, request);
         
         return ResponseEntity.ok(sentMessage);
