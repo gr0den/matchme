@@ -232,7 +232,8 @@ export default function CardFlow({ onSubmitSuccess }: CardFlowProps) {
                 >
                     {currentCard.type === "picture" ? "Submit" : "Next"}
                 </button>
-                {renderUserObject()}
+                {//renderUserObject()
+                }
             </div>
         </div>
     )
