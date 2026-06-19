@@ -17,6 +17,8 @@ public interface ProfileRepository extends JpaRepository<Profile, Long>
                               ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography,
                                            LEAST(p.search_radius * 1000, :searchRadius * 1000)) 
                   AND p.user_id != :currentUserId
+                  AND p.user_id NOT IN (SELECT c.connection_id FROM user_connections c WHERE c.user_id = :currentUserId)
+                  AND p.user_id NOT IN (SELECT c.user_id FROM user_connections c WHERE c.connection_id = :currentUserId)
             """,
             nativeQuery = true)
     List<Long> findRecommendationsByLocation(@Param("longitude") double longitude,
