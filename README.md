@@ -48,9 +48,9 @@ make down
 
 ## Tech Stack
 
-**Backend:** Java 21, Spring Boot, PostgreSQL, Redis, Flyway
-**Frontend:** React 19, TypeScript, Vite 
-**Infrastructure:** Docker, Docker Compose  
+# **Backend:** Java 21, Spring Boot, PostgreSQL, Redis, Flyway
+# **Frontend:** React 19, TypeScript, Vite 
+# **Infrastructure:** Docker, Docker Compose  
 
 ## Make Commands
 
