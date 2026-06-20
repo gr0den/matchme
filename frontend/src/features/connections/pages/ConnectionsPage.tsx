@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useState } from "react"
-import { useOutletContext } from "react-router-dom"
+import { useNavigate, useOutletContext } from "react-router-dom"
 import NavBar from "../../../shared/components/ui/navbar/navbar"
 import { useAuth } from "../../../shared/context/AuthContext"
 import type { RootOutletContext } from "../../../app/RootLayout"
 import ConnectionCard from "../components/ConnectionCard"
 import {
     acceptConnectionRequest,
+    disconnectUser,
     getConnectedUser,
     getConnections,
     rejectConnectionRequest,
@@ -15,6 +16,7 @@ import type { ConnectedUser, ConnectionAction } from "../types/connectionTypes"
 
 export default function ConnectionsPage() {
     const { currentUserId } = useAuth()
+    const navigate = useNavigate()
     const { connectionNotificationVersion } = useOutletContext<RootOutletContext>()
     const [pendingUsers, setPendingUsers] = useState<ConnectedUser[]>([])
     const [activeUsers, setActiveUsers] = useState<ConnectedUser[]>([])
@@ -104,6 +106,25 @@ export default function ConnectionsPage() {
         }
     }
 
+    async function handleDisconnect(targetUser: ConnectedUser) {
+        setBusyUserActions((actions) => ({ ...actions, [targetUser.id]: "disconnect" }))
+        setError(null)
+
+        try {
+            await disconnectUser(targetUser.id)
+            setActiveUsers((users) => users.filter((user) => user.id !== targetUser.id))
+            setOpenAboutIds((ids) => ids.filter((id) => id !== targetUser.id))
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Failed to disconnect user.")
+        } finally {
+            setBusyUserActions((actions) => {
+                const nextActions = { ...actions }
+                delete nextActions[targetUser.id]
+                return nextActions
+            })
+        }
+    }
+
     return (
         <>
             <NavBar />
@@ -156,9 +177,11 @@ export default function ConnectionsPage() {
                                                 key={user.id}
                                                 user={user}
                                                 mode="connection"
-                                                busyAction={null}
+                                                busyAction={busyUserActions[user.id] ?? null}
                                                 isAboutOpen={openAboutIds.includes(user.id)}
                                                 onToggleAbout={() => toggleAbout(user.id)}
+                                                onChat={() => navigate(`/chat?contactId=${user.id}`)}
+                                                onDisconnect={() => handleDisconnect(user)}
                                             />
                                         ))}
                                     </div>

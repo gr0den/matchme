@@ -1,10 +1,13 @@
 import { useLocation, useNavigate } from "react-router-dom"
+import { useOutletContext } from "react-router-dom"
+import type { RootOutletContext } from "../../../../app/RootLayout"
 import { logout } from "../../../../features/auth/api/authApi"
 import "./navbar.css"
 
 export default function NavBar() {
     const navigate = useNavigate()
     const location = useLocation()
+    const { unreadChatCount } = useOutletContext<RootOutletContext>()
 
     async function handleLogout() {
         try {
@@ -52,9 +55,15 @@ export default function NavBar() {
                 <li>
                     <button
                         type="button"
-                        className="navbar-button"
+                        className={getNavButtonClass("/chat")}
+                        onClick={() => navigate("/chat")}
                     >
-                        Chat
+                        <span className="navbar-chat-label">Chat</span>
+                        {unreadChatCount > 0 && (
+                            <span className="navbar-chat-badge" aria-label={`${unreadChatCount} unread chat messages`}>
+                                {unreadChatCount > 99 ? "99+" : unreadChatCount}
+                            </span>
+                        )}
                     </button>
                 </li>
             </ul>

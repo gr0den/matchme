@@ -85,3 +85,12 @@ export async function rejectConnectionRequest(request: ConnectionRequest): Promi
 
     await handleOkResponse(response, "Failed to reject connection request.")
 }
+
+export async function disconnectUser(contactId: number): Promise<void> {
+    const response = await fetch(`${BASE_URL}/connections/${contactId}`, {
+        method: "DELETE",
+        credentials: "include",
+    })
+
+    await handleOkResponse(response, "Failed to disconnect user.")
+}

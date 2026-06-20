@@ -15,7 +15,7 @@ export type ConnectionRequest = {
     targetUserId: number;
 }
 
-export type ConnectionAction = "accept" | "reject"
+export type ConnectionAction = "accept" | "reject" | "disconnect"
 
 export type ConnectionCardMode = "request" | "connection"
 
@@ -27,4 +27,6 @@ export type ConnectionCardProps = {
     onToggleAbout: () => void;
     onAccept?: () => void;
     onReject?: () => void;
+    onChat?: () => void;
+    onDisconnect?: () => void;
 }

@@ -39,7 +39,7 @@ export default function LocationCard({
                     type="text"
                     id="radius"
                     name="radius"
-                    placeholder="30"
+                    placeholder="8000"
                     onChange={(event) => onChange(event)}
                 />
                 <label htmlFor="radius">Search Radius 1 - 20 000km</label>

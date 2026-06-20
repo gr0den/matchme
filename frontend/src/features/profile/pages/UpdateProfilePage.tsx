@@ -30,6 +30,8 @@ export default function UpdateProfilePage() {
     const [formData, setFormData] = useState<EditProfileForm | null>(null)
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [isSaving, setIsSaving] = useState(false)
+    const [saveMessage, setSaveMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
     const [isGettingLocation, setIsGettingLocation] = useState(false)
     const [locationMessage, setLocationMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
 
@@ -87,6 +89,7 @@ export default function UpdateProfilePage() {
         if (!formData) return
 
         clearAllErrors()
+        setSaveMessage(null)
 
         const profilePayload = buildProfilePayload(formData)
 
@@ -101,12 +104,28 @@ export default function UpdateProfilePage() {
 
         const hasErrors = validationErrors.some((error) => error !== null)
 
-        if (hasErrors) return
+        if (hasErrors) {
+            setSaveMessage({
+                type: "error",
+                text: "Please fix the highlighted fields and try again.",
+            })
+            return
+        }
 
         try {
+            setIsSaving(true)
             await updateProfileApi(profilePayload)
+            setSaveMessage({
+                type: "success",
+                text: "Profile updated successfully.",
+            })
         } catch (error) {
-            setError(error instanceof Error ? error.message : "Failed to update profile.")
+            setSaveMessage({
+                type: "error",
+                text: error instanceof Error ? error.message : "Failed to update profile.",
+            })
+        } finally {
+            setIsSaving(false)
         }
     }
 
@@ -241,14 +260,6 @@ export default function UpdateProfilePage() {
         )
     }
 
-    function renderUserObject() {
-        return (
-            <pre className="profile-debug">
-                {JSON.stringify(formData, null, 2)}
-            </pre>
-        )
-    }
-
     if (isLoading) {
         return <p className="profile-status">Loading...</p>
     }
@@ -334,18 +345,21 @@ export default function UpdateProfilePage() {
                 </div>
 
                 <div className="profile-field pictureUrl">
-                    <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageChange}
-                    />
-                    <button
-                        type="button"
-                        onClick={handleNewImageUpload}
-                        disabled={isUploadingImage}
-                    >
-                        {isUploadingImage ? "Uploading..." : "Upload image"}
-                    </button>
+                    <div className="profile-picture-controls">
+                        <input
+                            className="profile-file-input"
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageChange}
+                        />
+                        <button
+                            type="button"
+                            onClick={handleNewImageUpload}
+                            disabled={isUploadingImage}
+                        >
+                            {isUploadingImage ? "Uploading..." : "Upload image"}
+                        </button>
+                    </div>
                     {imageError && (
                         <p className="profile-error">{imageError}</p>
                     )}
@@ -368,10 +382,19 @@ export default function UpdateProfilePage() {
                     </label>
                 </div>
 
-                <button type="submit">Save</button>
+                <button type="submit" disabled={isSaving}>
+                    {isSaving ? "Loading..." : "Save"}
+                </button>
+                {saveMessage && (
+                    <p
+                        className={`profile-save-message ${saveMessage.type}`}
+                        role={saveMessage.type === "error" ? "alert" : "status"}
+                    >
+                        {saveMessage.text}
+                    </p>
+                )}
             </form>
 
-            {renderUserObject()}
         </div>
     )
 }

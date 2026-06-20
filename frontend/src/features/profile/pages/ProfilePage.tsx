@@ -55,6 +55,7 @@ export default function ProfilePage() {
                         type="button"
                         className={view === 'cardFlow' ? "active" : ""}
                         onClick={() => setView('cardFlow')}
+                        hidden
                     >
                         Card Flow
                     </button>
@@ -62,6 +63,7 @@ export default function ProfilePage() {
                         type="button"
                         className={view === 'updateProfile' ? "active" : ""}
                         onClick={() => setView('updateProfile')}
+                        hidden
                     >
                         Update Page
                     </button>
