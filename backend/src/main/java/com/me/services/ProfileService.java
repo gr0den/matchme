@@ -7,6 +7,7 @@ import com.me.dto.response.profile.UpdateProfileResponse;
 import com.me.dto.response.user.UserBioResponse;
 import com.me.dto.response.user.UserProfileResponse;
 import com.me.dto.response.user.UserResponse;
+import com.me.entities.Connection;
 import com.me.entities.Genre;
 import com.me.entities.Interest;
 import com.me.entities.Profile;
@@ -14,6 +15,7 @@ import com.me.entities.User;
 import com.me.exceptions.ProfileNotFoundException;
 import com.me.exceptions.UserNotFoundException;
 import com.me.mappers.ProfileMapper;
+import com.me.repositories.ConnectionRepository;
 import com.me.repositories.GenreRepository;
 import com.me.repositories.InterestRepository;
 import com.me.repositories.ProfileRepository;
@@ -27,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -37,6 +40,8 @@ public class ProfileService
     private final UserRepository userRepository;
     private final InterestRepository interestRepository;
     private final GenreRepository genreRepository;
+    private final ConnectionRepository connectionRepository;
+    private final RecommendationService recommendationService;
 
     private static final GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(),
                                                                                4326);
@@ -134,10 +139,15 @@ public class ProfileService
         return profileRepository.existsById(userId);
     }
 
-    public UserResponse getUser(Long userId)
+    public UserResponse getUser(Long currentUserId, Long targetUserId)
     {
+        if (!hasPermissionToViewProfile(currentUserId, targetUserId))
+        {
+            throw new ProfileNotFoundException();
+        }
+
         Profile profile = profileRepository
-                .findById(userId)
+                .findById(targetUserId)
                 .orElseThrow(() -> new ProfileNotFoundException());
 
         return new UserResponse().setId(profile.getId())
@@ -145,20 +155,30 @@ public class ProfileService
                                  .setPictureUrl(profile.getPictureUrl());
     }
 
-    public UserProfileResponse getUserProfile(Long userId)
+    public UserProfileResponse getUserProfile(Long currentUserId, Long targetUserId)
     {
+        if (!hasPermissionToViewProfile(currentUserId, targetUserId))
+        {
+            throw new ProfileNotFoundException();
+        }
+
         Profile profile = profileRepository
-                .findById(userId)
+                .findById(targetUserId)
                 .orElseThrow(() -> new ProfileNotFoundException());
 
         return new UserProfileResponse().setId(profile.getId())
                                         .setBio(profile.getBiography());
     }
 
-    public UserBioResponse getUserBio(Long userId)
+    public UserBioResponse getUserBio(Long currentUserId, Long targetUserId)
     {
+        if (!hasPermissionToViewProfile(currentUserId, targetUserId))
+        {
+            throw new ProfileNotFoundException();
+        }
+
         Profile profile = profileRepository
-                .findById(userId)
+                .findById(targetUserId)
                 .orElseThrow(() -> new ProfileNotFoundException());
 
         Double longitude = profile.getLocation()
@@ -173,5 +193,27 @@ public class ProfileService
                                     .setLongitude(longitude)
                                     .setLatitude(latitude)
                                     .setSearchRadius(profile.getSearchRadius());
+    }
+
+    private boolean hasPermissionToViewProfile(Long currentUserId, Long targetUserId) 
+    {
+        if (currentUserId.equals(targetUserId)) 
+        {
+            return true;
+        }
+
+        Optional<Connection> connection = connectionRepository.findMutualConnection(currentUserId, targetUserId);
+        
+        if (connection.isPresent()) 
+        {
+            String status = connection.get().getStatus();
+            
+            if (status.equals("CONNECTED") || status.equals("PENDING")) 
+            {
+                return true;
+            }
+        } 
+        
+        return recommendationService.getRecommendations(currentUserId).contains(targetUserId);
     }
 }

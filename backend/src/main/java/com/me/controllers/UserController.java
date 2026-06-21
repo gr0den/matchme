@@ -22,43 +22,55 @@ public class UserController
     @GetMapping("/me")
     public ResponseEntity<UserResponse> getMe(@AuthenticationPrincipal Long userId)
     {
-        return getUser(userId);
-    }
-
-    @GetMapping("/me/profile")
-    public ResponseEntity<UserProfileResponse> getMeProfile(@AuthenticationPrincipal Long userId)
-    {
-        return getUserProfile(userId);
-    }
-
-    @GetMapping("/me/bio")
-    public ResponseEntity<UserBioResponse> getMeBio(@AuthenticationPrincipal Long userId)
-    {
-        return getUserBio(userId);
-    }
-
-    @GetMapping("/users/{id}")
-    public ResponseEntity<UserResponse> getUser(@PathVariable Long id)
-    {
-        UserResponse userResponse = profileService.getUser(id);
+        UserResponse userResponse = profileService.getUser(userId, userId);
 
         return ResponseEntity.ok()
                              .body(userResponse);
     }
 
-    @GetMapping("/users/{id}/profile")
-    public ResponseEntity<UserProfileResponse> getUserProfile(@PathVariable Long id)
+    @GetMapping("/me/profile")
+    public ResponseEntity<UserProfileResponse> getMeProfile(@AuthenticationPrincipal Long userId)
     {
-        UserProfileResponse meProfileResponse = profileService.getUserProfile(id);
+        UserProfileResponse meProfileResponse = profileService.getUserProfile(userId, userId);
 
         return ResponseEntity.ok()
                              .body(meProfileResponse);
     }
 
-    @GetMapping("/users/{id}/bio")
-    public ResponseEntity<UserBioResponse> getUserBio(@PathVariable Long id)
+    @GetMapping("/me/bio")
+    public ResponseEntity<UserBioResponse> getMeBio(@AuthenticationPrincipal Long userId)
     {
-        UserBioResponse userBioResponse = profileService.getUserBio(id);
+        UserBioResponse userBioResponse = profileService.getUserBio(userId, userId);
+
+        return ResponseEntity.ok()
+                             .body(userBioResponse);
+    }
+
+    @GetMapping("/users/{targetUserId}")
+    public ResponseEntity<UserResponse> getUser(@AuthenticationPrincipal Long currentUserId,
+                                                @PathVariable Long targetUserId)
+    {
+        UserResponse userResponse = profileService.getUser(currentUserId, targetUserId);
+
+        return ResponseEntity.ok()
+                             .body(userResponse);
+    }
+
+    @GetMapping("/users/{targetUserId}/profile")
+    public ResponseEntity<UserProfileResponse> getUserProfile(@AuthenticationPrincipal Long currentUserId,
+                                                              @PathVariable Long targetUserId)
+    {
+        UserProfileResponse meProfileResponse = profileService.getUserProfile(currentUserId, targetUserId);
+
+        return ResponseEntity.ok()
+                             .body(meProfileResponse);
+    }
+
+    @GetMapping("/users/{targetUserId}/bio")
+    public ResponseEntity<UserBioResponse> getUserBio(@AuthenticationPrincipal Long currentUserId,
+                                                      @PathVariable Long targetUserId)
+    {
+        UserBioResponse userBioResponse = profileService.getUserBio(currentUserId, targetUserId);
 
         return ResponseEntity.ok()
                              .body(userBioResponse);
