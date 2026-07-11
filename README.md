@@ -12,7 +12,7 @@ A full-stack web application built with **Spring Boot** and **React** that helps
 
 ```bash
 
-git clone <https://gitea.kood.tech/glebvorontsov/web.git>
+git clone git@github.com:gr0den/matchme.git
 cd matchme
 
 ```
@@ -75,7 +75,7 @@ UI User Flow:
 
     - Navigate to the Match page to connect with someone
 
-    - send connection request to recommended users
+    - Send connection request to recommended users
 
-    - have a chat!
+    - Have a chat!
 
